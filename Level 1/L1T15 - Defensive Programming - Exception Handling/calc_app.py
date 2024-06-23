@@ -5,24 +5,23 @@ Calculator App
 The way it works:
 1 - Program starts up
 2 - get_valid_function gets user input and checks to see if its an 
-equation or one of the allowed operators.
+    equation or one of the allowed operators.
 3 - If it is an equation get_valid_input creates a list and calls on 
-element_checks
+    element_checks
 4 - element_checks will check the validity of the equation.
 5 - Valid equation is then pushed through the calculator app and the
-the answer is stored as a result.
+    the answer is stored as a result.
 6 - The result is then appended onto the answers list and saved to file.
-7- This is also displayed on screen.
+    This is also displayed on screen.
 7 - If get_valid_function returns "v" then the view_equation function is 
-called to print to screen equation history 
+    called to print to screen equation history 
 8 - If get_valid_function returns "e" then the save_to_text_file 
-function is called to add all answers to the file with new lines before
-exit. 
+    function is called to add all answers to the file with new lines 
+    before exit. 
 9 - Any failed checks will result in an error message and redirection 
-to the input screen.
+    to the input screen.
 '''
 #----------------------------------------------------------------------
-
 
 #----------------------------------------------------------------------
 # FUNCTIONS
@@ -32,22 +31,19 @@ def calc_app(user_function):
     '''
     calc_func uses lists to dynamically check the function and apply the 
     correct calculation. 
+
     It will turn user input into a temp list reading the value in the 
     second position will determine the function applied. 
-    Also checks for division by 0. 
-    This seemed like the easiest place to put this check. 
-    There is no other reason its here. 
-    No need to create list here. It all comes in as a list already.
-    '''
 
-    # Assuming that function has made it past the checks and is a list
+    No need to create list here. It all comes in as a list already.
+    
+    Assumes that the function has made it past the checks and is a list.
+    '''
     # ans_list created to store all answers.
     temp_func_list = user_function
     ans_list = ""
 
-    # Calculator function, checks operator and performs calculation 
-    # based on operator. All equations that make it past the check will
-    # be stored in ans_list
+    # All equations that make it past the check will be stored here.
     if temp_func_list[1] == "*":
         result = multiply_numbers(int(temp_func_list[0]),
                                   int(temp_func_list[2])) 
@@ -67,6 +63,7 @@ def calc_app(user_function):
     ans_list = " ".join(temp_func_list) + f" = {result}"      
     return ans_list
 
+
 def divide_numbers(num_1, num_2):
     '''
     This function handles division and checks for division by zero.
@@ -75,33 +72,34 @@ def divide_numbers(num_1, num_2):
         return "You are trying to divide by zero! Try again"
     return num_1 / num_2
 
+
 def multiply_numbers(num_1, num_2):
     '''
     This function handles multiplication
-    '''
-    
+    ''' 
     return num_1 * num_2
+
 
 def add_numbers(num_1, num_2):
     '''
     This function handles addition
     '''
-
     return num_1 + num_2
+
 
 def minus_numbers(num_1, num_2):
     '''
     This function handles subtraction
     '''
-
     return num_1 - num_2
+
 
 def element_checks(user_function,allowed_operators):
     '''
     element_checks performs the following checks:
 
     1 - Checks to ensure that there are exactly 3 list items. This 
-    ensures that there are not too many or too few items.
+        ensures that there are not too many or too few items.
     2 - Checks that first element is an int.
     3 - Checks that third element is an int.
     4 - Checks to see if there is a valid operator ie + - * / 
@@ -109,7 +107,6 @@ def element_checks(user_function,allowed_operators):
     This is assuming that the function made it passed the first check 
     and is coming in as a list already
     '''
-
     check_list = user_function
 
     # Check the length of the list
@@ -145,6 +142,7 @@ def element_checks(user_function,allowed_operators):
     # If all checks pass return true
     return True
 
+
 def get_valid_function(allowed_chars):
     '''
     get_valid_function:
@@ -166,7 +164,6 @@ def get_valid_function(allowed_chars):
     Added extra line break for clarity when using the program for longer
     periods of time.
     '''
-
     while True:
         user_function = input("\nEnter a function with 2 integers and 1"
                               " operator.\nMake sure to add spaces"
@@ -185,20 +182,21 @@ def get_valid_function(allowed_chars):
 
         if element_checks(valid_function_list, allowed_chars):
             return valid_function_list
-     
+
+
 def save_to_txt_file(answer, filename="equations.txt"):
     '''
     save_to_txt_file prints all historic equations to a file called 
     equations.txt
     This was done last.
     ''' 
-
     try:
         with open(filename, 'a', encoding='utf-8') as file:
                 file.write(answer + "\n")
     
     except IOError as error:
         print((f"Oof. There was an error trying to write to file: {error}"))
+
 
 def view_equations(answers):
     '''
@@ -212,22 +210,24 @@ def view_equations(answers):
     else:
         print("No previous equations to display.")
 
+
 #----------------------------------------------------------------------
 # MAIN PROGRAM
 #----------------------------------------------------------------------
-
 '''
 The idea was to have everything done using specialized functions that
- would act as multiple layers of protection.
+would act as multiple layers of protection.
+
 Allowed operators was left outside for easier access in the need to make
- a change.
+a change.
+
 Answers list had to be stored here as it needed to last outside of the 
 functions.
+
 Auto save to file feature added. Viewing will still be possible but all
 answers are saved to file automatically. Because of this I had to rework
 the approach. 
 '''
-
 allowed_operators = ["+", "-", "/", "*"]
 answers = []
 
@@ -249,3 +249,4 @@ while True:
             print(result)
             answers.append(result)
             save_to_txt_file(result)
+
