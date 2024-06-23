@@ -1,0 +1,1 @@
+print(input("Type something to print it out!: "))

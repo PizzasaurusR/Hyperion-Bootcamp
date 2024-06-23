@@ -1,0 +1,19 @@
+It's a box, print the same stars just remove the extras - main logic used across the program
+
+Get the maximum number of lines for the pyramid and set as var max_num_lines
+Create variable count to keep track of the number of lines that have been printed
+Create var line_size to set the maximum line size/ maximum number of stars that will be present in any line in the pyramid. This will be the maximum number of lines divided by 2. Use math.ceil to make sure that any halves are rounded up.
+Create var stars that will be "*" multiplied by line_size. If the maximum number of lines is 7 then the line size will be 4 and stars will then be ****
+This will create a rectangular box: 
+****
+****
+****
+****
+****
+****
+****
+
+Now use a for loop in range 0 to the max_num_lines. If count is less than line_size, increase count by 1 and print a slice of stars starting from 0 till count. This will print * ont the first line and ** on the second.
+If count is greater than or equal to line_size and less than or equal to max_num_lines then print stars less the difference between max_num_lines and count. You can also simply slice from the back of stars but I prefer this method.
+Increase count but only after the print has happened as it has already been increased at the end of the first if loop.
+This method will print a star pyramid for and number of lines.

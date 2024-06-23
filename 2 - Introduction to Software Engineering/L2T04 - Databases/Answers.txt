@@ -1,0 +1,106 @@
+1. Define each of the following terms:
+
+a) Data:
+   - Raw facts that have not been processed to reveal their meaning.
+
+   - Reference: "Simply put, data are raw facts. Raw data has not yet 
+     been processed to reveal its meaning." 
+     (Page 2)【12-002-1 Databases.pdf】.
+
+b) Field:
+   - A character or a group of characters that have a specific meaning. 
+   
+     I understand this to be a very specific, individual filter. For 
+     example, a field on a person could be eye colour, hair colour, 
+     feet size, or height. It is a very limited part of something or it 
+     contains 1 point of data.
+   
+   - Reference: "A field is a character or group of characters that 
+     have a specific meaning. It is used to define and store data." 
+     (Page 9)【12-002-1 Databases.pdf】.
+
+c) Record:
+   - A Record is a logically connected set of one or more fields. This 
+     is a collection of fields that can all be used to describe the same 
+     thing. Continuing my previous example, I can't identify a person by
+     1 data point/field like hair colour, however, if I add more data 
+     points/fields like eye colour and height, then I will be able to 
+     identify the person.
+
+     All this is to say that a record is a collection of data 
+     points/fields.
+
+   - Reference: "A record is a logically connected set of one or more 
+     fields that describes a person, place, or thing." 
+     (Page 9)【12-002-1 Databases.pdf】.
+
+d) File:
+   - A file is a collection of related records. It's a record or 
+     records.
+
+   - Reference: "A file is a collection of related records." 
+     (Page 9)【12-002-1 Databases.pdf】.
+
+2. What is a DBMS and what are its advantages?
+
+DBMS (Database Management System):
+   - A DBMS is a Database Management System. This is a program or set of
+      programs to work with the database structure and control access to
+      the data stored in the database. This will ensure that the data is
+      turned into information and that information is then provided to 
+      the relevant users. A DBMS will take data that is stored and then
+      turn that data into information.
+
+   - Reference: "A database management system (DBMS) is a collection of 
+     programs, which works to manage the database structure and control 
+     access to the data stored in the database." 
+     (Page 3)【12-002-1 Databases.pdf】.
+
+**Advantages of a DBMS:**
+   - The advantages of a DBMS are: 
+     
+     Improved Data Sharing 
+     Better data integration 
+     Minimized data inconsistency 
+     Improved data access 
+     Improved decision-making 
+     Increased end-user productivity 
+     
+     Essentially, all data is provided to the relevant users in a more 
+     digestible format. This in turn provides useful insights that will
+     drive better decision-making and overall efficiency.
+
+   - Reference: "Tutorial Link (n.d.) lists some of the advantages of a 
+     DBMS: Better data sharing, Improved data integration, Minimised 
+     data inconsistency, Improved data access, Improved decision-making,
+     Increased end-user productivity." 
+     (Page 3)【12-002-1 Databases.pdf】.
+
+3. Explain the difference between data and information.
+
+   - Data is raw facts and figures that have not been processed or 
+     analyzed. Information is data that has been processed, organized, 
+     or structured in a meaningful way.
+
+   - Reference: "Simply put, data are raw facts. Raw data has not 
+     yet been processed to reveal its meaning. Information, on the other 
+     hand, is the result of processing raw data to reveal its meaning." 
+     (Page 2)【12-002-1 Databases.pdf】.
+
+4. What is metadata?
+
+   - Data that provides information about other data.
+   
+   - Reference: "Databases are shared, integrated computer 
+     structures that store a collection of end-user data, the raw facts 
+     of interest, metadata, the descriptions of the data characteristics, 
+     and relationships that link data variables together." 
+     (Page 3)【12-002-1 Databases.pdf】.
+
+5. Given the file below, answer the following questions:
+
+e) How many records does the file contain?
+   - 4.
+
+f) How many fields are there per record?
+   - 6.

@@ -1,0 +1,18 @@
+get swim_time from user input, make sure it's in minutes
+get cycl_time from user input, make sure it's in minutes
+get run_time from user input, make sure it's in minutes
+
+set qual_time to 100
+set new var total_time = swim_time + cycl_time + run_time
+
+if total_time <= qual_time
+	print "Amazing! You have been awarded Provicial Colours!"
+	
+elif total_time > qual_time and total_time <= (qual_time + 5)
+	print "Well done! You have been awarded Provicial Half Colours!"
+	
+elif total_time > (qual_time + 5) and total_time <= (qual_time + 10)
+	print "Good job! You have been awarded a Provicial Scroll!"
+	
+else
+	print "Sorry, you did not qualify."

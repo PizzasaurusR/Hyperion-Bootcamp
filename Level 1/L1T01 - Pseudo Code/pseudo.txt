@@ -1,0 +1,72 @@
+1)
+set largest number variable to 0
+
+get number input from user
+
+if number input is greater than 0 and number input is greater than largest number
+	change largest number variable to number input
+else if number input is less than or equal to 0
+	print largest number variable
+else if number input is greater than 0 and number input is less than or equal to largest number
+	get new number input form user
+	
+2)
+
+set first_name to ""
+
+get name input from user
+
+set first_name to name input form user
+
+print out first_name + " " + "Hello, World."
+
+3) 
+
+set number_of_ints to random positive int
+
+set count to 1
+
+set total to 0
+
+set temp_number to 0
+
+set average to 0
+
+while number_of_ints > count 
+		let temp_number = total
+		total = temp_numbers + count
+		average = total divided by count 
+		let count = count + 1
+		
+return average
+		
+		
+4)
+let grocery_list = apples, pears, oranges, milk, bread, soap
+set length_list to the length of grocery_list
+let bought = apples, milk, bread
+set count to 0
+
+while count is less than length_list
+	set variable item_check to the the item in the count postion of grocery_list
+	check if item_check appears in bought list then remove item from grocery_list
+	set length_list to length of grocery_list
+	count = count +1
+	
+sort grocery_list alphabetically
+
+print grocery_list
+
+5)
+set S to 0
+set A to 0
+set P to 0
+
+get X
+get Y
+
+let S equal X plus Y
+let A equal S divided by 2
+Let P equal X times Y
+
+Print out S, A, P 

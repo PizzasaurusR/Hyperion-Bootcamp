@@ -1,0 +1,10 @@
+# Ignore these folders
+/hello
+/data
+
+# Ignore these file/filetypes
+*.jpg
+*.png
+python_programming
+*.pdf
+student.db

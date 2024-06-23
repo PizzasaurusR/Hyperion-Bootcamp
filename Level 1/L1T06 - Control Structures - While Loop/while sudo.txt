@@ -1,0 +1,16 @@
+
+program must take input from user
+store input as var usr_input
+create var input_count = 0, this is the total number of user inputs
+create var run_total =0, total value of user inputs 
+create new var avg =0, average
+
+while usr_input is not -1
+    add usr_input to var run_total
+    input_count += 1
+    ask for new input from user and assign to usr_input
+    if usr_input == -1
+    break
+
+avg = run_total / input_count
+print "Your average is " + avg
