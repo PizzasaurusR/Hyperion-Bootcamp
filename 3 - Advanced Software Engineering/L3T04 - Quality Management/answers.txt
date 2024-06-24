@@ -1,0 +1,112 @@
+
+1) Quality Standards
+1a) A Mobile Game:
+    
+    - Performance: Ensures the game runs smoothly across various 
+                   devices without lag or crashing.
+    
+    - UI: Ensure the user easily can understand and use the UI.
+    
+    - Security: User data must be secured against breaches and 
+                unauthorized access.
+    
+    - Compatibility: The game must work across various platforms such as
+                    IOs, Android, phones or tablets.
+    
+    - Updates: Allows regular maintenance and updates without negatively
+               impacting the user experience.
+
+1b) Banking App: 
+    
+    - Security: The user's data must be robustly secured. This would 
+        include, authentication, encryption and protection against any
+        data breaches or fraud.
+
+    - Accuracy: The app must be accurate in all calculations and 
+        financial transactions. This must be error-free.
+
+    - Reliability: The user must be able to use the app 24/7 with 
+        minimal downtime.
+
+    - Compliance: The application must adhere to industry standards and 
+        and regulations must be followed.
+
+    - Usability: Is the app easy to use and navigate for the end-user?
+
+1c) Database for a Medical Organization:
+
+    - Security: All patient data must have strict access controls and 
+        encryption. 
+    
+    - Reliability: The data must be accurate and have consistent  
+        controls for the addition, manipulation and storage of the data.
+
+    - Compliance: The database must meet HIPAA and any other regulatory
+        standards.
+
+    - Scalability: The database must be able to handle large volumes
+        of data as the Organization grows.
+
+    - Backup and Recovery: There must be backups and failsafes to ensure
+        that the data is recoverable. 
+
+2) A high-quality software process is designed to systematically address
+   various aspects of any software development. By taking a structured 
+   and careful approach, we ensure that each phase of the development
+   process is meticulously planned out and executed. This minimizes the 
+   chances that any critical areas of the project are overlooked and 
+   ensures a high overall quality for the final product.
+
+   Oftentimes, when using a high-quality process, such as Agile, 
+   continuous testing and validation are implemented throughout the 
+   development process. This ensures that any defects are identified
+   and corrected early. The feedback from the testing also helps 
+   maintain high quality and reliability standards. High stakeholder 
+   collaboration will also lead to clearly outlined user expectations 
+   and requirements. This will in turn lead to a flexible and adaptable
+   software product.
+
+   These methods are, however, very resource-intensive including time,
+   skilled labor and financial investments. Smaller teams or solo 
+   developers will struggle to allocate the appropriate resources to 
+   each task. Adhering to all the standards presented by a high-quality 
+   process can be strenuous and add an extra level of complexity to any 
+   project. This can slow down the development process especially when 
+   in an Agile environment. Couple this with the fact that the 
+   flexibility in these processes can often lead to scope creep, 
+   causing a project to deviate from its original goals.  
+
+   Finally, high-quality processes often rely heavily on skilled 
+   personnel. If the team lacks all of the necessary skills, then the 
+   process will not lead to the desired outcome.
+
+3) Program inspections are a great way to catch errors in a program 
+   because they involve a detailed review of the code by a team of 
+   experienced developers, often including those who didn't write it. 
+   This helps spot defects like logic errors, code inconsistencies, and
+   deviations from coding standards before the code is even run. 
+   Inspections are especially good at finding issues that automated 
+   tests might miss, like design flaws and requirements mismatches. 
+   However, they aren't as effective at catching runtime errors, 
+   performance problems, and other dynamic issues that only show up 
+   when the code is executed in a real-world environment.
+
+4) Validating the relationships between internal product attributes and 
+   external attributes is challenging for a few reasons. Internal 
+   attributes, like code quality or modularity, are technical aspects 
+   that developers can measure directly. However, these don't always 
+   translate neatly into external attributes like user satisfaction or 
+   overall product usability, which are more subjective and influenced 
+   by a wide range of factors. For example, clean code and 
+   well-structured modules should theoretically make a product more 
+   reliable and maintainable, but user satisfaction can also depend on 
+   factors like design aesthetics and performance under real-world 
+   conditions, which aren't always directly linked to internal code 
+   quality. 
+   
+   Additionally, external attributes are often impacted by the context 
+   in which the software is used, including the specific needs and 
+   expectations of users, which can vary widely and change over time. 
+   This makes it tough to draw a direct line between the technical 
+   quality of the software and how well it meets user needs in the real
+   world.
