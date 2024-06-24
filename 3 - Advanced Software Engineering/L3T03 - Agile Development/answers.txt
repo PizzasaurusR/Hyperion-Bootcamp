@@ -1,0 +1,83 @@
+All answers were drafted with the use of the following additional 
+resources:
+
+https://stackoverflow.com/questions/tagged/agile
+https://www.reddit.com/r/agile/
+https://www.scrum.org/
+https://www.agilealliance.org/
+
+1) The Waterfall method is structured, sequential and is suited to 
+    projects that have defined and static requirements. There is a large
+    amount of planning and extensive documentation with the focus being 
+    primarily on the delivery of the completed product.
+
+    The Agile method focuses on collaborations, high levels of
+    adaptability and continuous user input. As there is incremental 
+    delivery this methodology is flexible and well-suited to projects
+    that involve changing requirements.
+
+2) Working Software over comprehensive documentation - As someone who 
+    has very often skimped on proper documentation, I can attest that 
+    this can lead to many problems. Often, it is the case that I simply 
+    can't remember what steps I took to get to my outcome, or even what 
+    the main logic of a program is.
+
+    This problem can be compounded when you have large developer teams 
+    working on a single project. When developers leave or are no longer 
+    working on the project it can often lead to sections of code that
+    "Can't" be changed, because those that remain just do not 
+    understand it. This is especially true when you have developers of
+    different skill levels working on one project.   
+
+3) The Agile methodology is an approach to software development that 
+    emphasizes flexibility, collaboration, and continuous improvement. 
+    Unlike the traditional Waterfall model, which follows a linear and 
+    sequential process, Agile is iterative and incremental. This means 
+    that the project is divided into small, manageable chunks called 
+    sprints or iterations, typically lasting 2-4 weeks. Each iteration 
+    involves a complete development cycle, including planning, design,
+    coding, testing, and review.
+
+    In Agile, requirements are expected to change based on ongoing 
+    user feedback and changing business needs. This adaptability 
+    allows teams to respond quickly to changes, ensuring the final 
+    product aligns closely with user expectations. Agile frameworks, 
+    such as Scrum or Kanban, promote a collaborative environment where 
+    self-organizing teams work closely with users throughout the 
+    project.
+
+    Basically if Agile was building a house then you would build the 
+    foundations and a few key rooms. The owner would then move in and 
+    live there for a month. After the month the owner would give 
+    feedback on areas that work or don't work. You would then go in 
+    again and plan out the next bit of construction to fit the needs of 
+    the owner. This would then continue until the house is complete.
+
+4) It's the nature of a fast-paced industry. There are constant 
+    improvements in the developer world. There's always someone, or a 
+    group of someones, that are trying to push the envelope and see just
+    how far they can take coding. Sometimes this shows itself in new
+    and innovative features, a better or more efficient way to do 
+    a task.
+
+    Due to this, users and stakeholders can be introduced to a new 
+    concept that they would like to add or they strive for better 
+    efficiency. Often it is just the case that the end user simply does 
+    not know what they want or do not know that there is a feature 
+    that they need until they need it.
+
+5)Testing project features early in the development process is essential
+  for gaining a better understanding of system requirements. It helps 
+  clear up any ambiguities, assumptions and misconceptions that may not 
+  have been apparent during initial planning. This will also reveal
+  any usability or performance issues. 
+  
+  By validating design decisions and detecting issues sooner, developers
+   can adjust their approach early in the project lifecycle, removing 
+   the need for costly reworks later on. This proactive approach in turn 
+   supports iterative design, where developers deliver small increments 
+   of functionality, test them rigorously, and incorporate feedback to 
+   continuously better the product. Early testing also increases
+   collaboration and communication among team members and users, 
+   ensuring everyone shares a clear vision and understanding of the 
+   project's goals. 
