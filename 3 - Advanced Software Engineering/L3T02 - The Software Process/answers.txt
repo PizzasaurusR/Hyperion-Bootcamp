@@ -1,0 +1,68 @@
+1a) The Waterfall method - Using a structured and linear approach will
+    align well with the robust requirements of a critical safety 
+    feature such as an ABS. 
+
+    This will also lead to extensive documentation, which I assume would
+    be necessary when working on a system such as this.
+
+    The requirements for such a system should be well-outlined and clear
+    , meaning that the stringent requirement of each phase being
+    completed before moving on to the next section would increase the 
+    safety standards.
+
+1b) Reuse-Orientated Software Engineering Model - This is a complex task
+    that requires a large amount of knowledge. As this is a relatively 
+    new field, I feel that leveraging existing libraries and frameworks
+    would make this the appropriate approach. 
+
+    This will allow the system to be built using reusable components
+    that will reduce development costs and time. There is no need to 
+    reinvent the wheel here.
+
+1c) Incremental Development Model - An accounting software for a large 
+    entity such as a University would be very complex and highly 
+    customized. By using the Incremental model, the user can evaluate
+    each increment and provide feedback, which can in turn be 
+    incorporated into the next increment.
+
+    By doing this we ensure that the user is happy with the end product 
+    and we eliminate the need for a complete overhaul in the event that 
+    the user does not like the system/ a feature. This can also ensure
+    that the transition from the old software to the new software is 
+    smooth and with as few problems as possible.
+
+1d) Incremental Development Model - This seems like a highly complex
+    project with many moving parts. It also seems like a system that 
+    would need to be updated frequently to adapt to changing 
+    environmental data, such as a change to data gathering sites eg.
+    Air BNB, airline sites etc. 
+    
+    As such it would be best to build the system feature by feature.
+    This will allow each section to be thoroughly tested with the option
+    for frequent feedback and user suggestion integrations. This will 
+    also allow the system to be more flexible when adapting to new 
+    requirements or technological advancements, such as the 
+    incorporation of AI.   
+
+2) Oftentimes, business software must be customized to the business that
+   will be using the software. Using the incremental model allows for 
+   more flexibility when designing, creating, and updating 
+   software.
+
+   It's also easier to pick up issues and get feedback from clients. 
+   Users will provide feedback which can cut down on development time 
+   especially when it comes to fixes and updates.
+
+   It is also possible to create a "working" system where the core 
+   features are available but the system is not in its final iteration.
+   This allows users to get value from the software early on.
+
+3) The initial requirements stage is what the developer thinks that the 
+    user needs in terms of functionality or specifications. These 
+    requirements tend to be very high-level and will also focus on 
+    system constraints.
+
+    In the second phase, we check the reusable components and make sure 
+    that they meet our specifications and constraints correctly. We 
+    would also refine the requirements to match the desired user 
+    outcomes.
