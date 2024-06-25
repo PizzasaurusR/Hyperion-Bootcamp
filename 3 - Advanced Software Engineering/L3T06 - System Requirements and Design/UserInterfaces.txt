@@ -1,0 +1,38 @@
+1) This is a horrible site.
+    Good:
+    - It's easy to see where to search the site.
+    - Navigation away from the homepage is easy
+    - Consistent image use for buttons makes them easy to identify
+
+    Bad:
+    - The colours are clashing making it difficult to read the text
+    - The background image is jarring and difficult to look at.
+    - There is little to no information about the company or its
+      product shown.
+    - The elements are not in the standard positions, e.g. the logo is 
+      not in the corner of the screen. This will make navigation more
+      difficult.
+
+2) This is a well-designed site.
+
+    Good:
+    - The site is clean and easy to read.
+    - Sections are demarcated by different blocks of colour.
+    - Text is clearly visible and easy to read.
+    - A consistent theme is used throughout the site.
+    - The menu is easy to use and it is intuitive to move around the 
+      site.
+    - Menu features a dropdown list simplifying the design.  
+    - Images are used in conjunction with descriptions for product
+      catalogues allowing the user to make a more informed choice.
+    - Menu is visible throughout the site, no matter how far down on the
+      page you are.   
+
+    Bad:
+    - Pages are long with no way to quickly travel to the top.
+    - There is no search function.
+    - There is no contact page option in the top menu, this is only 
+      found in the footer.  
+    - I feel that the footer is poorly designed. It feels out of sync
+      with the rest of the site and could have better flow.
+    - I would also put the reviews higher on the page.    

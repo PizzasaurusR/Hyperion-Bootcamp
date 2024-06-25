@@ -1,0 +1,52 @@
+1)  Error handling: The requirements do not specify what happens in the 
+                    event that the credit card or ID number is incorrect.
+
+    Destination Selection: There is no clear method of presenting 
+                           the destinations to the user. How are the 
+                           options presented to the user?
+
+    Security: There is no mention of how the data is to be secured. The 
+              sytem takes in sensitive information such as credit card 
+              number and ID number.
+
+    UI: There are no specifications on the user interface other than 
+        a menu, a message and a button. How user friendly is the 
+        interface meant to be?
+    
+    Accessibility: How will the system assist those with disabilities?
+
+    Ticket Issuing: There is no mention of a format for the ticket to be
+                    issued. The requirements do not specify if the 
+                    ticket must be printed, displayed on screen or event
+                    sent to the user digitally.
+
+2)  Security: All user data must be encrypted in-line with industry 
+              standards.
+    
+    Reliability: The system should maintain uptime during the operating
+                 hours of the railway service. There should be a 
+                 mechanism to ensure that users funds are returned or 
+                 only taken as the last step in the event of a system 
+                 failure.
+
+    Usability: The UI must be intuitive and easy to navigate. There 
+               should also be easy-to-follow instructions at each step 
+               of the purchasing process. Accessibility options must
+               also be added for any users with disabilities.
+
+    Error handling: The system should display clear error messages for 
+                    any issue that the system might face. The should 
+                    be a mechanism for the user to cancel the purchase
+                    at any point.
+
+    Scaleability: The system must be robust enough to handle peak 
+                  usage times without any system degradation or loss of 
+                  performance. 
+
+    Maintainability: The system should be modular for easy updates and 
+                     maintenance.
+
+    Compliance: The system should comply with any relevant regulatory 
+                bodies.
+
+      
