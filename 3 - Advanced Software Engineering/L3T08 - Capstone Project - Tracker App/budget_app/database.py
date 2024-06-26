@@ -4,6 +4,7 @@ classes into separate files. This made it easier to read and modify
 individual sections of the code.
 
 This file is for the database operations.
+Exception handling has been added.
 '''
 #-----------------------------------------------------------------------
 # LIBRARY IMPORT
@@ -23,9 +24,12 @@ Method made to create tables.
 '''
 class BudgetManager:
     def __init__(self, db_name="budget.db"):
-        self.conn = sqlite3.connect(db_name)
-        # Call table creation method
-        self.create_tables()
+        try:
+            self.conn = sqlite3.connect(db_name)
+            # Call table creation method
+            self.create_tables()
+        except sqlite3.Error as error:
+            print(f"Error connecting to database: {error}")
 
 
     def create_tables(self):
@@ -42,44 +46,84 @@ class BudgetManager:
         transactions table uses a foreign key to connect to the 
         categories table.
         '''
-        cursor = self.conn.cursor()
-        cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
-                          id INTEGER PRIMARY KEY,
-                          name TEXT NOT NULL,
-                          type TEXT NOT NULL)''')
-        cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
-                          id INTEGER PRIMARY KEY,
-                          amount REAL NOT NULL,
-                          date TEXT NOT NULL,
-                          category_id INTEGER,
-                          description TEXT,
-                          FOREIGN KEY(category_id) REFERENCE categories(id))
-                       ''')
-        # Commit changes
-        self.conn.commit()
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
+                            id INTEGER PRIMARY KEY,
+                            name TEXT NOT NULL,
+                            type TEXT NOT NULL)''')
+            
+            cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
+                            id INTEGER PRIMARY KEY,
+                            amount REAL NOT NULL,
+                            date TEXT NOT NULL,
+                            category_id INTEGER,
+                            description TEXT,
+                            FOREIGN KEY(category_id) REFERENCE categories(id))
+                            ''')
+            # Commit changes
+            self.conn.commit()
+        except sqlite3.Error as error:
+            print(f"Error creating tables: {error}")
 
     
     def add_category(self, category):
         '''
         Method to add a category.
         '''
-        cursor = self.conn.cursor()
-        cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
-                       (category.name, category.type))
-        # Commit changes
-        self.conn.commit()
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
+                            (category.name, category.type))
+            # Commit changes
+            self.conn.commit()
+        except sqlite3.Error as error:
+            print(f"Error adding category: {error}")
 
     
-    def add_transaction(self, amount, date, category_id, description=""):
+    def add_transaction(self, transaction):
         '''
         Method to add transactions to database.
         '''
-        self.cursor.execute('''INSERT INTO transactions (
-                               amount, date, category_id, description) 
-                               VALUES (?, ?, ?, ?)''', 
-                               (amount, date, category_id, description))
-        # Commit changes
-        self.conn.commit()
+        try:
+            cursor = self.conn.cursor()
+            category_id = self.get_category_id(transaction.category.name, 
+                                               transaction.category.type)
+            
+            if category_id is not None:
+                cursor.execute('''INSERT INTO transactions (
+                                amount, date, category_id, description) 
+                                VALUES (?, ?, ?, ?)''', 
+                                (transaction.amount, transaction.date, 
+                                 category_id, transaction.description))
+                # Commit changes
+                self.conn.commit()
+            
+            else:
+                print("Category not found.")
+        
+        except sqlite3.Error as error:
+            print(f"Error adding transaction: {error}")
+
+
+    def get_category_id(self, name, type):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('''SELECT id FROM categories WHERE name = ? AND
+                              type = ?''', (name, type))
+            result = cursor.fetchone()
+
+            if result:
+                return result[0]
+            
+            else:
+                print("Category not found.")
+                return None
+        
+        except sqlite3.Error as error:
+            print(f"Error fetching category id: {error}")
+            return None
+
 
     def close(self):
         '''
