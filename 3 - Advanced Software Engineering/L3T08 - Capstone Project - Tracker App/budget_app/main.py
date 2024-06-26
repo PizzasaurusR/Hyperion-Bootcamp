@@ -37,7 +37,7 @@ def menu():
     # Display Menu
     try:
         while True:
-            print('''--- Bookstore Management Menu ---
+            print('''--- Budget Management Menu ---
             1. Add Expense
             2. View Expenses
             3. View Expenses by Category

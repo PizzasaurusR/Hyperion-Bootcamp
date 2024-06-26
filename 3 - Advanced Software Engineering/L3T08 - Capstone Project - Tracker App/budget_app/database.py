@@ -27,6 +27,7 @@ class BudgetManager:
         # Call table creation method
         self.create_tables()
 
+
     def create_tables(self):
         '''
         Method to create the tables for transactions and for categories.
@@ -56,6 +57,35 @@ class BudgetManager:
                        ''')
         # Commit changes
         self.conn.commit()
+
+    
+    def add_category(self, category):
+        '''
+        Method to add a category.
+        '''
+        cursor = self.conn.cursor()
+        cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
+                       (category.name, category.type))
+        # Commit changes
+        self.conn.commit()
+
+    
+    def add_transaction(self, amount, date, category_id, description=""):
+        '''
+        Method to add transactions to database.
+        '''
+        self.cursor.execute('''INSERT INTO transactions (
+                               amount, date, category_id, description) 
+                               VALUES (?, ?, ?, ?)''', 
+                               (amount, date, category_id, description))
+        # Commit changes
+        self.conn.commit()
+
+    def close(self):
+        '''
+        Method to handle closing of database connections
+        '''
+        self.conn.close()
 #-----------------------------------------------------------------------
 # FUNCTIONS
 #-----------------------------------------------------------------------
