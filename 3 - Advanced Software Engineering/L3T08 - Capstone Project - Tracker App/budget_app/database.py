@@ -12,7 +12,7 @@ Exception handling has been added.
 
 import sqlite3
 # Import classes from models.py
-from models import Category, Transaction
+from models import Category, Transaction, Expense
 
 #-----------------------------------------------------------------------
 # CLASSES
@@ -31,7 +31,9 @@ class BudgetManager:
         except sqlite3.Error as error:
             print(f"Error connecting to database: {error}")
 
-
+    #-------------------------------------------------------------------
+    # METHODS
+    #-------------------------------------------------------------------
     def create_tables(self):
         '''
         Method to create the tables for transactions and for categories.
@@ -45,14 +47,25 @@ class BudgetManager:
 
         transactions table uses a foreign key to connect to the 
         categories table.
+
+        Added in additional table for Expenses. I decided to 
+        differentiate transactions and expenses. Main reason for this is
+        that I forgot that the menu said "expenses" and in my head it 
+        made more sense that they be called transactions.
+
+        Expenses now mean a fixed amount that will be added to your
+        deductibles. This can be input once and then added to all
+        budget calculations. E.g. Rent, Car Payments, Medical Aid.
         '''
         try:
             cursor = self.conn.cursor()
+            # Create 'categories' table if not exist 
             cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
                             id INTEGER PRIMARY KEY,
                             name TEXT NOT NULL,
                             type TEXT NOT NULL)''')
             
+            # Create 'transactions' table if not exist
             cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
                             id INTEGER PRIMARY KEY,
                             amount REAL NOT NULL,
@@ -61,15 +74,26 @@ class BudgetManager:
                             description TEXT,
                             FOREIGN KEY(category_id) REFERENCE categories(id))
                             ''')
+            
+            # Create 'expenses' table if not exist
+            cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
+                              id INTEGER PRIMARY KEY,
+                              name TEXT NOT NULL,
+                              amount REAL NOT NULL,
+                              category_id INTEGER,
+                              FOREIGN KEY(category_id) REFERENCES categories(id
+                              ))''')
+            
             # Commit changes
             self.conn.commit()
+
         except sqlite3.Error as error:
             print(f"Error creating tables: {error}")
 
     
     def add_category(self, category):
         '''
-        Method to add a category.
+        Add new category into 'categories' table
         '''
         try:
             cursor = self.conn.cursor()
@@ -83,7 +107,7 @@ class BudgetManager:
     
     def add_transaction(self, transaction):
         '''
-        Method to add transactions to database.
+        Add transactions to 'transactions' table.
         '''
         try:
             cursor = self.conn.cursor()
@@ -106,9 +130,28 @@ class BudgetManager:
             print(f"Error adding transaction: {error}")
 
 
+    def add_expense(self, expense):
+        '''
+        Add expenses to 'expenses' table.
+        '''
+        try:
+            cursor = self.conn.cursor()
+            category_id = self.get_category_id(expense.category.name, 
+                                               expense.category.type)
+            
+            if category_id is not None:
+                cursor.execute('''INSERT INTO expenses (
+                               name, amount, category_id) 
+                               VALUES (?, ?, ?)''', 
+                               (expense.name, expense.amount, category_id))
+                # Commit changes
+                self.conn.commit()
+
+
     def get_category_id(self, name, type):
         '''
-        Method to fetch Category ID form categories table. 
+        Method to fetch category_id from 'categories' table based on 
+        name and type. 
         '''
         try:
             cursor = self.conn.cursor()
@@ -153,8 +196,3 @@ class BudgetManager:
             self.conn.close()
         except sqlite3.Error as error:
             print(f"Error closing table: {error}")
-
-
-#-----------------------------------------------------------------------
-# FUNCTIONS
-#-----------------------------------------------------------------------

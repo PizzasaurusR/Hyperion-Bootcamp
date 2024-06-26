@@ -3,6 +3,8 @@
 #-----------------------------------------------------------------------
 import sqlite3
 
+from models import Category, Transaction
+from database import BudgetManager
 #-----------------------------------------------------------------------
 # CLASSES
 #-----------------------------------------------------------------------
@@ -11,19 +13,19 @@ import sqlite3
 # FUNCTIONS
 #-----------------------------------------------------------------------
 
-def quit_program():
+def main():
     '''
-    Exit program after confirmation
-    '''
-    exit_app = input("Would you like to exit? (Y/N): ").lower()
-    return exit_app == 'y'
-
-def menu():
-    '''
-    Main menu function of the program.
+    Main function of the program.
 
     Main menu is based on menu used in previous bookstore_management
-    program.
+    program and integrated into main function.
+
+    Changed Expense to Transaction for clarity. An expense should be 
+    something that can be added ahead of time, such as Rent, and this 
+    should be calculated into the ongoing budget.
+
+    A transaction will be any deduction in funds that would occur in a
+    persons day-to-day life, such as Groceries, Petrol etc.
     '''
     # Call global vars and assign by initiating db  
     global db, cursor
@@ -38,17 +40,19 @@ def menu():
     try:
         while True:
             print('''--- Budget Management Menu ---
-            1. Add Expense
-            2. View Expenses
-            3. View Expenses by Category
-            4. Add Income
-            5. View Income
-            6. View Income by Category
-            7. Set Budget for a Category
-            8. View Budget for a Category
-            9. Set Financial Goals
-            10. View Progress Towards Financial Goal
-            11. Quit''')
+            1. Add Transaction
+            2. View Transactions
+            3. View Transactions by Category
+            4. Add Expense
+            5. View Expenses
+            6. Add Income
+            7. View Income
+            8. View Income by Category
+            9. Set Budget for a Category
+            10. View Budget for a Category
+            11. Set Financial Goals
+            12. View Progress Towards Financial Goal
+            13. Quit''')
 
             choice = input("Please enter your choice: ")
 
