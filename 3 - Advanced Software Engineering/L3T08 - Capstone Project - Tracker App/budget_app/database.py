@@ -107,6 +107,9 @@ class BudgetManager:
 
 
     def get_category_id(self, name, type):
+        '''
+        Method to fetch Category ID form categories table. 
+        '''
         try:
             cursor = self.conn.cursor()
             cursor.execute('''SELECT id FROM categories WHERE name = ? AND
@@ -125,11 +128,33 @@ class BudgetManager:
             return None
 
 
+    def view_categories(self):
+        '''
+        Method to fetch and display all categories in categories table.
+        '''
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM categories")
+            categories = cursor.fetchall()
+
+            for category in categories:
+                print(f"ID: {category[0]}, Name: {category[1]}, "
+                      f"Type: {category[2]}")
+                
+        except sqlite3.Error as error:
+            print(f"Error viewing categories: {error}")
+
+
     def close(self):
         '''
         Method to handle closing of database connections
         '''
-        self.conn.close()
+        try:
+            self.conn.close()
+        except sqlite3.Error as error:
+            print(f"Error closing table: {error}")
+
+
 #-----------------------------------------------------------------------
 # FUNCTIONS
 #-----------------------------------------------------------------------
