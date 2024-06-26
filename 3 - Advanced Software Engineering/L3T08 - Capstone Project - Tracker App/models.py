@@ -17,8 +17,8 @@ This file is for the category and transaction classes.
 class Category:
     '''
     Class to define Categories.
-    __str__ was used to ensure that a string is returned when call the 
-    method.
+    __str__ was used to ensure that a string is returned when calling 
+    the method.
     '''
     def __init__(self, name, type):
         self.name = name
@@ -31,8 +31,8 @@ class Category:
 class Transaction:
     '''
     Class to define Transactions.
-    __str__ was used to ensure that a string is returned when call the 
-    method.
+    __str__ was used to ensure that a string is returned when calling 
+    the method.
     '''
     def __init__(self, amount, date, category, description=""):
         self.amount = amount
