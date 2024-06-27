@@ -3,8 +3,9 @@
 #-----------------------------------------------------------------------
 import sqlite3
 
-from models import Category, Transaction, Expense
+from models import Category, Transaction, Expense, User
 from database import BudgetManager
+from auth import login, register
 #-----------------------------------------------------------------------
 # CLASSES
 #-----------------------------------------------------------------------
@@ -27,19 +28,26 @@ def main():
     A transaction will be any deduction in funds that would occur in a
     persons day-to-day life, such as Groceries, Petrol etc.
     '''
-    # Call global vars and assign by initiating db  
-    global db, cursor
-    db, cursor = database_init()
+    budget_manager = BudgetManager()
 
-    # Catch error
-    if not db or not cursor:
-        print("Failed to initialize database. Exiting program.")
-        return
+    print("--- Welcome to Budget Manager ---")
+    while True:
+        print("1. Login")
+        print("2. Register")
+        choice = input("Please choose an option: ")
 
-    # Display Menu
-    try:
-        while True:
-            print('''--- Budget Management Menu ---
+        if choice == '1':
+            user_id = login(budget_manager)
+            break
+
+        elif choice == '2':
+            register(budget_manager)
+
+        else:
+            print("Invalid choice. Please try again.")   
+    
+    while True:
+        print('''--- Budget Management Menu ---
             1. Add Transaction
             2. View Transactions
             3. View Transactions by Category
@@ -53,50 +61,40 @@ def main():
             11. Set Financial Goals
             12. View Progress Towards Financial Goal
             13. Quit''')
+        choice = input("Please enter your choice: ")
 
-            choice = input("Please enter your choice: ")
+        if  choice == '1':
+            add_transaction(budget_manager, user_id)
+        elif choice == '2':
+            view_transactions(budget_manager, user_id)
+        elif choice == '3':
+            view_transactions_by_category(budget_manager, user_id)
+        elif choice == '4':
+            add_expense(budget_manager, user_id)
+        elif choice == '5':
+            view_expenses(budget_manager)
+        elif choice == '6':
+            add_income(budget_manager, user_id)
+        elif choice == '7':
+            view_income(budget_manager, user_id)
+        elif choice == '8':
+            view_income_by_category(budget_manager, user_id)
+        elif choice == '9':
+            set_budget_for_category(budget_manager)
+        elif choice == '10':
+            view_budget_for_category(budget_manager)
+        elif choice == '11':
+            set_financial_goals(budget_manager)
+        elif choice == '12':
+            view_progress_towards_goals(budget_manager)
+        elif choice == '13':
+            print("Exiting...")
+            break
+        
+        else:
+            print("Invalid choice. Please try again")
 
-            if choice == '1':
-                add_expense(cursor)
-            
-            elif choice == '2':
-                budget_manager.view_transactions()
 
-            elif choice == '3':
-                view_expense_category(cursor)
-            elif choice == '4':
-                add_income(cursor)
-            elif choice == '5':
-                view_income(cursor)
-            elif choice == '6':
-                view_income_category(cursor)
-            elif choice == '7':
-                set_budget_category(cursor)
-            elif choice == '8':
-                view_budget_category(cursor)
-            elif choice == '9':
-                set_goals(cursor)
-            elif choice == '10':
-                view_progress(cursor)
-            
-            elif choice == '11':
-                # Set Financial Goals logic
-                pass
-            elif choice == '12':
-                # View Progress Towards Financial Goal logic
-                pass
-            elif choice == '13':
-                budget_manager.close()
-                break
-            else:
-                print("Invalid choice. Please enter a number from the menu.")
-
-    except KeyboardInterrupt:
-        print("\nProgram terminated by user.")
-
-    finally:
-        if db:
-            db.close()
 #-----------------------------------------------------------------------
 # MAIN PROGRAM
 #-----------------------------------------------------------------------

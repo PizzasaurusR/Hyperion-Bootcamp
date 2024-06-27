@@ -5,15 +5,6 @@ individual sections of the code.
 
 This file is for the category and transaction classes.
 '''
-#-----------------------------------------------------------------------
-# LIBRARY IMPORT
-#-----------------------------------------------------------------------
-
-
-#-----------------------------------------------------------------------
-# CLASSES
-#-----------------------------------------------------------------------
-
 class Category:
     '''
     Class to define Categories.
@@ -61,7 +52,17 @@ class Expense:
                 f"{self.category.name}: {self.amount} on {self.date} -"
                 f" {self.description}")
     
+class User:
+    '''
+    Class to define Users.
+    __str__ was used to ensure that a string is returned when calling 
+    the method.
+    '''
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+    def __str__(self):
+        return f"User: {self.username}"
+
     
-#-----------------------------------------------------------------------
-# FUNCTIONS
-#-----------------------------------------------------------------------

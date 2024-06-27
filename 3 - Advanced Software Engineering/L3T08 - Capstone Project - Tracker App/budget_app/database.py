@@ -5,6 +5,8 @@ individual sections of the code.
 
 This file is for the database operations.
 Exception handling has been added.
+
+Added user table and modified all searches to be based on a user profile
 '''
 #-----------------------------------------------------------------------
 # LIBRARY IMPORT
@@ -12,7 +14,7 @@ Exception handling has been added.
 
 import sqlite3
 # Import classes from models.py
-from models import Category, Transaction, Expense
+from models import Category, Transaction, Expense, User
 
 #-----------------------------------------------------------------------
 # CLASSES
@@ -28,9 +30,10 @@ class BudgetManager:
             self.conn = sqlite3.connect(db_name)
             # Call table creation method
             self.create_tables()
+
         except sqlite3.Error as error:
             print(f"Error connecting to database: {error}")
-
+    
     #-------------------------------------------------------------------
     # METHODS
     #-------------------------------------------------------------------
@@ -56,6 +59,8 @@ class BudgetManager:
         Expenses now mean a fixed amount that will be added to your
         deductibles. This can be input once and then added to all
         budget calculations. E.g. Rent, Car Payments, Medical Aid.
+
+        Added 'user' table.
         '''
         try:
             cursor = self.conn.cursor()
@@ -84,11 +89,18 @@ class BudgetManager:
                               FOREIGN KEY(category_id) REFERENCES categories(id
                               ))''')
             
+            # Create 'users' table if not exist
+            cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                              id INTEGER PRIMARY KEY,
+                              username TEXT NOT NULL UNIQUE,
+                              password TEXT NOT NULL)''')
+
             # Commit changes
             self.conn.commit()
 
         except sqlite3.Error as error:
             print(f"Error creating tables: {error}")
+            self.conn.rollback()
 
     
     def add_category(self, category):
@@ -101,8 +113,10 @@ class BudgetManager:
                             (category.name, category.type))
             # Commit changes
             self.conn.commit()
+
         except sqlite3.Error as error:
             print(f"Error adding category: {error}")
+            self.conn.rollback()
 
     
     def add_transaction(self, transaction):
@@ -128,6 +142,7 @@ class BudgetManager:
         
         except sqlite3.Error as error:
             print(f"Error adding transaction: {error}")
+            self.conn.rollback()
 
 
     def add_expense(self, expense):
@@ -146,6 +161,48 @@ class BudgetManager:
                                (expense.name, expense.amount, category_id))
                 # Commit changes
                 self.conn.commit()
+
+            else:
+                print("Category not found.")
+
+        except sqlite3.Error as error:
+            print(f"Error adding expense: {error}")
+            self.conn.rollback()
+
+
+    def add_user(self, user):
+        '''
+        Add username and password to 'users' table.
+        '''
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('''INSERT INTO users (username, password) 
+                           VALUES (?, ?)''', (user.username, user.password))
+            # Commit changes
+            self.conn.commit()
+        
+        except sqlite3.Error as error:
+            print(f"Error adding user: {error}")
+            self.conn.rollback()
+
+
+    def authenticate_user(self, username, password):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute('''SELECT id FROM users WHERE 
+                           username = ? AND password = ?''', 
+                           (username, password))
+            result = cursor.fetchone()
+            
+            if result:
+                return result[0]
+            
+            else:
+                return None
+        
+        except sqlite3.Error as error:
+            print(f"Error authenticating user: {error}")
+            return None
 
 
     def get_category_id(self, name, type):
@@ -188,11 +245,30 @@ class BudgetManager:
             print(f"Error viewing categories: {error}")
 
 
-    def view_transactions(self):
+    def view_transactions(self, user_id, start_date=None, end_date=None):
         '''
         View all transactions stored in the 'transactions' table based
         on a date range. Default is one month from the day of request.
         '''
+        try:
+            cursor = self.conn.cursor()
+            if start_date and end_date:
+                cursor.execute('''SELECT * FROM transactions WHERE
+                               user_id = ? and date BETWEEN ? AND ?''', 
+                               (user_id, start_date, end_date))
+                
+            else:
+                cursor.execute("SELECT * FROM transactions WHERE user_id = ?", 
+                               (user_id))
+            
+            transactions = cursor.fetchall()
+            for transaction in transactions:
+                print(f"ID: {transaction[0]}, Amount: {transaction[1]}, "
+                      f"Date: {transaction[2]}, Category ID: {transaction[3]},"
+                      f" Description: {transaction[4]}")
+        
+        except sqlite3.Error as error:
+            print(f"Error viewing transactions: {error}")
 
 
     def view_expenses(self):
