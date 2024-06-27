@@ -62,6 +62,9 @@ def add_expense(budget_manager, user_id):
 
 
 def add_income(budget_manager, user_id):
+    '''
+    Function to get user input and add income into 'incomes' table.
+    '''
     try:
         amount = float(input("Enter the income amount: "))
         date = input("Enter the date of income (YYYY-MM-DD): ")
@@ -87,12 +90,36 @@ def add_income(budget_manager, user_id):
         print(f"An error occurred: {error}")
 
 
-def set_financial_goals(budget_manager):
-    print("Feature not implemented yet.")
+def set_financial_goals(budget_manager, user_id):
+    '''
+    Function to set financial goals in 'goals' table
+    '''
+    description = input("Enter the description of your financial goal: ")
+    target_amount = float(input("Enter the target amount for your goal: "))
+    due_date = input("Enter the due date for your goal (YYYY-MM-DD): ")
+    success = budget_manager.add_goal(user_id, description, 
+                                      target_amount, due_date)
+    
+    if success:
+        print("Financial goal set successfully.")
+    
+    else:
+        print("Failed to set financial goal.")
 
 
-def set_budget_for_category(budget_manager):
-    print("Feature not implemented yet.")
+def set_budget_for_category(budget_manager, user_id):
+    '''
+    Function to get user input and set budget for categories.
+    '''
+    category_id = int(input("Enter the category ID for the budget: "))
+    amount = float(input("Enter the budget amount: "))
+    success = budget_manager.add_budget(category_id, user_id, amount)
+    
+    if success:
+        print("Budget set successfully for the category.")
+    
+    else:
+        print("Failed to set budget for the category.")
 
 # Fetch operators
 
@@ -192,9 +219,33 @@ def view_income_by_category(budget_manager, user_id):
                   f"Description: {income[5]}")
 
 
-def view_budget_for_category(budget_manager):
-    print("Feature not implemented yet.")
+def view_budget_for_category(budget_manager, user_id):
+    '''
+    Function to call get_budget_for_category and then display budget 
+    amounts
+    '''
+    category_id = int(input("Enter the category ID to view the budget: "))
+    budget = budget_manager.get_budget_for_category(category_id, user_id)
+    
+    if budget:
+        print(f"Budget for Category ID {category_id}: "
+              f"{budget['budget_amount']}")
+    
+    else:
+        print("No budget set for this category.")
 
 
-def view_progress_towards_goals(budget_manager):
-    print("Feature not implemented yet.")
+def view_progress_towards_goals(budget_manager, user_id):
+    '''
+    Function to display progress towards goals.
+    '''
+    goals = budget_manager.get_goals(user_id)
+    
+    if goals:
+        for goal in goals:
+            print(f"Goal: {goal['description']}\n"
+                  f"Target: {goal['target_amount']}\n"
+                  f" Due Date: {goal['due_date']}\n")
+    
+    else:
+        print("No financial goals set.")

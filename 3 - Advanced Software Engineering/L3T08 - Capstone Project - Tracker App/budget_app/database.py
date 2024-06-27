@@ -108,7 +108,25 @@ class BudgetManager:
                       description TEXT,
                       FOREIGN KEY(category_id) REFERENCES categories(id),
                       FOREIGN KEY(user_id) REFERENCES users(id))''')
-
+        
+        # Create 'goals' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS goals (
+                        id INTEGER PRIMARY KEY,
+                        user_id INTEGER,
+                        goal_description TEXT,
+                        target_amount REAL,
+                        due_date TEXT,
+                        FOREIGN KEY(user_id) REFERENCES users(id))''')
+            
+        # Create 'budget' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS budgets (
+                        id INTEGER PRIMARY KEY,
+                        category_id INTEGER,
+                        user_id INTEGER,
+                        budget_amount REAL,
+                        FOREIGN KEY(category_id) REFERENCES categories(id),
+                        FOREIGN KEY(user_id) REFERENCES users(id))''')
+        
         # Commit changes
         self.conn.commit()
     
@@ -200,7 +218,9 @@ class BudgetManager:
 
     @handle_db_errors
     def authenticate_user(self, username, password):
-        
+        '''
+        Method to authenticate user on login
+        '''
         cursor = self.conn.cursor()
         cursor.execute('''SELECT id FROM users WHERE 
                         username = ? AND password = ?''', 
@@ -216,6 +236,9 @@ class BudgetManager:
 
     @handle_db_errors
     def add_income(self, income):
+        '''
+        Method to add income into 'incomes' table
+        '''
         cursor = self.conn.cursor()
         
         try:
@@ -232,6 +255,37 @@ class BudgetManager:
             print(f"Failed to add income: {error}")
             return False
 
+
+    @handle_db_errors
+    def add_budget(self, category_id, user_id, budget_amount):
+        '''
+        Method to add budget into 'budgets' table
+        '''
+        cursor = self.conn.cursor()
+        cursor.execute('''INSERT INTO budgets 
+                       (category_id, user_id, budget_amount) 
+                       VALUES (?, ?, ?)''', 
+                       (category_id, user_id, budget_amount))
+        self.conn.commit()
+        
+        return True
+    
+
+    @handle_db_errors
+    def add_goal(self, user_id, description, target_amount, due_date):
+        '''
+        Method to set financial goals in 'goals' table
+        '''
+        cursor = self.conn.cursor()
+        cursor.execute('''INSERT INTO goals 
+                      (user_id, goal_description, target_amount, due_date) 
+                      VALUES (?, ?, ?, ?)''', 
+                      (user_id, description, target_amount, due_date))
+        
+        self.conn.commit()
+        
+        return True
+    
 
 # Fetch Operators
     @handle_db_errors
@@ -334,6 +388,9 @@ class BudgetManager:
 
     @handle_db_errors
     def view_income(self, user_id):
+        '''
+        View all user income/s stored in the 'incomes' table.
+        '''
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM income WHERE user_id = ?", (user_id,))
         incomes = cursor.fetchall()
@@ -343,6 +400,10 @@ class BudgetManager:
 
     @handle_db_errors
     def view_income_by_category(self, user_id, category_id):
+        '''
+        View all user income/s stored in the 'incomes' table based on 
+        category.
+        '''
         cursor = self.conn.cursor()
         cursor.execute('''SELECT * FROM income WHERE 
                        user_id = ? AND category_id = ?''', 
@@ -350,6 +411,30 @@ class BudgetManager:
         incomes = cursor.fetchall()
         
         return incomes
+
+
+    @handle_db_errors
+    def get_budget_for_category(self, category_id, user_id):
+        '''
+        Get user budget for each category. For use when viewing budgets.
+        '''
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT budget_amount FROM budgets WHERE 
+                       category_id = ? AND user_id = ?''', 
+                       (category_id, user_id))
+        result = cursor.fetchone()
+        
+        return {'budget_amount': result[0]} if result else None
+
+    @handle_db_errors
+    def get_goals(self, user_id):  
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT goal_description, target_amount, due_date 
+                       FROM goals WHERE user_id = ?''', (user_id,))
+        
+        return [
+            {'description': row[0], 'target_amount': row[1], 
+             'due_date': row[2]} for row in cursor.fetchall()]
 
 
     @handle_db_errors

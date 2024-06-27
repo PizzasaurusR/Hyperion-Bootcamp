@@ -70,7 +70,7 @@ def main():
         elif choice == '4':
             menu.add_expense(budget_manager, user_id)
         elif choice == '5':
-            menu.view_expenses(budget_manager)
+            menu.view_expenses(budget_manager, user_id)
         elif choice == '6':
             menu.add_income(budget_manager, user_id)
         elif choice == '7':
@@ -78,13 +78,13 @@ def main():
         elif choice == '8':
             menu.view_income_by_category(budget_manager, user_id)
         elif choice == '9':
-            menu.set_budget_for_category(budget_manager)
+            menu.set_budget_for_category(budget_manager, user_id)
         elif choice == '10':
-            menu.view_budget_for_category(budget_manager)
+            menu.view_budget_for_category(budget_manager, user_id)
         elif choice == '11':
-            menu.set_financial_goals(budget_manager)
+            menu.set_financial_goals(budget_manager, user_id)
         elif choice == '12':
-            menu.view_progress_towards_goals(budget_manager)
+            menu.view_progress_towards_goals(budget_manager, user_id)
         elif choice == '13':
             print("Exiting...")
             break

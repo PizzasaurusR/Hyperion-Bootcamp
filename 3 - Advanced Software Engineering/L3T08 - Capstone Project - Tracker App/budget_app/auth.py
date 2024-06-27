@@ -40,3 +40,4 @@ def register(budget_manager):
             
             print("Registration successful. Please login.")
             return
+        

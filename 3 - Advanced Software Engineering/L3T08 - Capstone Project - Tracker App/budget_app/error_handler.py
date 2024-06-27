@@ -39,3 +39,4 @@ def handle_db_errors(func: Callable):
             print(f"An unexpected error occurred: {error}")
             args[0].conn.rollback()
     return wrapper_handle_db_errors
+
