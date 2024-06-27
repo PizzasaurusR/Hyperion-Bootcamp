@@ -101,17 +101,23 @@ class BudgetManager:
         # Commit changes
         self.conn.commit()
     
-
+    # Add or update operators
     @handle_db_errors
     def add_category(self, category):
         '''
         Add new category into 'categories' table
         '''
         cursor = self.conn.cursor()
-        cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
-                        (category.name, category.type))
-        # Commit changes
-        self.conn.commit()
+
+        try:
+            cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
+                            (category.name, category.type))
+            # Commit changes
+            self.conn.commit()
+            return True  # Indicate success
+        
+        except sqlite3.Error:
+            return False  # Indicate failure
 
     
     @handle_db_errors
@@ -123,17 +129,23 @@ class BudgetManager:
         category_id = self.get_category_id(transaction.category.name, 
                                             transaction.category.type)
             
-        if category_id is not None:
-            cursor.execute('''INSERT INTO transactions (
-                            amount, date, category_id, description) 
-                             VALUES (?, ?, ?, ?)''', 
-                            (transaction.amount, transaction.date, 
-                             category_id, transaction.description))
-            # Commit changes
-            self.conn.commit()
+        if category_id:
+            try:
+                cursor.execute('''INSERT INTO transactions (
+                                amount, date, category_id, description) 
+                                VALUES (?, ?, ?, ?)''', 
+                                (transaction.amount, transaction.date, 
+                                category_id, transaction.description))
+                # Commit changes
+                self.conn.commit()
+                return True  # Successful addition
             
+            except sqlite3.Error:
+                return False  # Error occurred
+        
         else:
             print("Category not found.")
+            return False  # Category not found
         
 
     @handle_db_errors
@@ -145,16 +157,22 @@ class BudgetManager:
         category_id = self.get_category_id(expense.category.name, 
                                                expense.category.type)
             
-        if category_id is not None:
-            cursor.execute('''INSERT INTO expenses (
-                            name, amount, category_id) 
-                            VALUES (?, ?, ?)''', 
-                            (expense.name, expense.amount, category_id))
-            # Commit changes
-            self.conn.commit()
-
+        if category_id:
+            try:
+                cursor.execute('''INSERT INTO expenses (
+                                name, amount, category_id) 
+                                VALUES (?, ?, ?)''', 
+                                (expense.name, expense.amount, category_id))
+                # Commit changes
+                self.conn.commit()
+                return True  # Expense added
+            
+            except sqlite3.Error:
+                return False  # Error in adding
+            
         else:
             print("Category not found.")
+            return False  # Category not found
 
 
     @handle_db_errors
@@ -184,7 +202,7 @@ class BudgetManager:
         else:
             return None
         
-
+# Fetch Operators
     @handle_db_errors
     def get_category_id(self, name, type):
         '''
