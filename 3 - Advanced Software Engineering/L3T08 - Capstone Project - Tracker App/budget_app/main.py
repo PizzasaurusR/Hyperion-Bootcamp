@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------
 import sqlite3
 
-from models import Category, Transaction
+from models import Category, Transaction, Expense
 from database import BudgetManager
 #-----------------------------------------------------------------------
 # CLASSES
@@ -58,8 +58,10 @@ def main():
 
             if choice == '1':
                 add_expense(cursor)
+            
             elif choice == '2':
-                view_expense(cursor)
+                budget_manager.view_transactions()
+
             elif choice == '3':
                 view_expense_category(cursor)
             elif choice == '4':
@@ -76,10 +78,16 @@ def main():
                 set_goals(cursor)
             elif choice == '10':
                 view_progress(cursor)
+            
             elif choice == '11':
-                if quit_program():
-                    print("Exiting program. Goodbye!")
-                    break
+                # Set Financial Goals logic
+                pass
+            elif choice == '12':
+                # View Progress Towards Financial Goal logic
+                pass
+            elif choice == '13':
+                budget_manager.close()
+                break
             else:
                 print("Invalid choice. Please enter a number from the menu.")
 

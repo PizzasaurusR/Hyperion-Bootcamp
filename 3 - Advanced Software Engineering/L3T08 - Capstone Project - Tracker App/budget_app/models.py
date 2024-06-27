@@ -45,6 +45,23 @@ class Transaction:
                 f"{self.category.name}: {self.amount} on {self.date} -"
                 f" {self.description}")
 
+class Expense:
+    '''
+    Class to define Expenses.
+    __str__ was used to ensure that a string is returned when calling 
+    the method.
+    '''
+    def __init__(self, name, amount, category):
+        self.name = name
+        self.amount = amount
+        self.category = category
+
+    def __str__(self):
+        return (f"{self.category.type.capitalize()} - "
+                f"{self.category.name}: {self.amount} on {self.date} -"
+                f" {self.description}")
+    
+    
 #-----------------------------------------------------------------------
 # FUNCTIONS
 #-----------------------------------------------------------------------

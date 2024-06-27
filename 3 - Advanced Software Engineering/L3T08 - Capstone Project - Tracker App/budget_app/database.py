@@ -188,6 +188,30 @@ class BudgetManager:
             print(f"Error viewing categories: {error}")
 
 
+    def view_transactions(self):
+        '''
+        View all transactions stored in the 'transactions' table based
+        on a date range. Default is one month from the day of request.
+        '''
+
+
+    def view_expenses(self):
+        """
+        View all expenses stored in the 'expenses' table.
+        """
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM expenses")
+            expenses = cursor.fetchall()
+
+            for expense in expenses:
+                print(f"ID: {expense[0]}, Name: {expense[1]}, "
+                      f"Amount: {expense[2]}, Category ID: {expense[3]}")
+        
+        except sqlite3.Error as error:
+            print(f"Error viewing expenses: {error}")
+
+
     def close(self):
         '''
         Method to handle closing of database connections
