@@ -15,6 +15,8 @@ Added user table and modified all searches to be based on a user profile
 import sqlite3
 # Import classes from models.py
 from models import Category, Transaction, Expense, User
+# Import error handle decorator
+from error_handler import handle_db_errors
 
 #-----------------------------------------------------------------------
 # CLASSES
@@ -25,7 +27,7 @@ The idea here is to be as modular as possible.
 Method made to create tables.
 '''
 class BudgetManager:
-    def __init__(self, db_name="budget.db"):
+    def __init__(self, db_name: str = "budget.db"):
         try:
             self.conn = sqlite3.connect(db_name)
             # Call table creation method
@@ -37,6 +39,8 @@ class BudgetManager:
     #-------------------------------------------------------------------
     # METHODS
     #-------------------------------------------------------------------
+    
+    @handle_db_errors
     def create_tables(self):
         '''
         Method to create the tables for transactions and for categories.
@@ -62,172 +66,146 @@ class BudgetManager:
 
         Added 'user' table.
         '''
-        try:
-            cursor = self.conn.cursor()
-            # Create 'categories' table if not exist 
-            cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
-                            id INTEGER PRIMARY KEY,
-                            name TEXT NOT NULL,
-                            type TEXT NOT NULL)''')
+        cursor = self.conn.cursor()
+        # Create 'categories' table if not exist 
+        cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        type TEXT NOT NULL)''')
             
-            # Create 'transactions' table if not exist
-            cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
-                            id INTEGER PRIMARY KEY,
-                            amount REAL NOT NULL,
-                            date TEXT NOT NULL,
-                            category_id INTEGER,
-                            description TEXT,
-                            FOREIGN KEY(category_id) REFERENCE categories(id))
-                            ''')
+        # Create 'transactions' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
+                        id INTEGER PRIMARY KEY,
+                        amount REAL NOT NULL,
+                        date TEXT NOT NULL,
+                        category_id INTEGER,
+                        description TEXT,
+                        FOREIGN KEY(category_id) REFERENCE categories(id))
+                        ''')
             
-            # Create 'expenses' table if not exist
-            cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
-                              id INTEGER PRIMARY KEY,
-                              name TEXT NOT NULL,
-                              amount REAL NOT NULL,
-                              category_id INTEGER,
-                              FOREIGN KEY(category_id) REFERENCES categories(id
-                              ))''')
+        # Create 'expenses' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
+                        id INTEGER PRIMARY KEY,
+                        name TEXT NOT NULL,
+                        amount REAL NOT NULL,
+                        category_id INTEGER,
+                        FOREIGN KEY(category_id) REFERENCES categories(id
+                        ))''')
             
-            # Create 'users' table if not exist
-            cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                              id INTEGER PRIMARY KEY,
-                              username TEXT NOT NULL UNIQUE,
-                              password TEXT NOT NULL)''')
+        # Create 'users' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                        id INTEGER PRIMARY KEY,
+                        username TEXT NOT NULL UNIQUE,
+                        password TEXT NOT NULL)''')
 
-            # Commit changes
-            self.conn.commit()
-
-        except sqlite3.Error as error:
-            print(f"Error creating tables: {error}")
-            self.conn.rollback()
-
+        # Commit changes
+        self.conn.commit()
     
+
+    @handle_db_errors
     def add_category(self, category):
         '''
         Add new category into 'categories' table
         '''
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
-                            (category.name, category.type))
-            # Commit changes
-            self.conn.commit()
-
-        except sqlite3.Error as error:
-            print(f"Error adding category: {error}")
-            self.conn.rollback()
+        cursor = self.conn.cursor()
+        cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
+                        (category.name, category.type))
+        # Commit changes
+        self.conn.commit()
 
     
+    @handle_db_errors
     def add_transaction(self, transaction):
         '''
         Add transactions to 'transactions' table.
         '''
-        try:
-            cursor = self.conn.cursor()
-            category_id = self.get_category_id(transaction.category.name, 
-                                               transaction.category.type)
+        cursor = self.conn.cursor()
+        category_id = self.get_category_id(transaction.category.name, 
+                                            transaction.category.type)
             
-            if category_id is not None:
-                cursor.execute('''INSERT INTO transactions (
-                                amount, date, category_id, description) 
-                                VALUES (?, ?, ?, ?)''', 
-                                (transaction.amount, transaction.date, 
-                                 category_id, transaction.description))
-                # Commit changes
-                self.conn.commit()
+        if category_id is not None:
+            cursor.execute('''INSERT INTO transactions (
+                            amount, date, category_id, description) 
+                             VALUES (?, ?, ?, ?)''', 
+                            (transaction.amount, transaction.date, 
+                             category_id, transaction.description))
+            # Commit changes
+            self.conn.commit()
             
-            else:
-                print("Category not found.")
+        else:
+            print("Category not found.")
         
-        except sqlite3.Error as error:
-            print(f"Error adding transaction: {error}")
-            self.conn.rollback()
 
-
+    @handle_db_errors
     def add_expense(self, expense):
         '''
         Add expenses to 'expenses' table.
         '''
-        try:
-            cursor = self.conn.cursor()
-            category_id = self.get_category_id(expense.category.name, 
+        cursor = self.conn.cursor()
+        category_id = self.get_category_id(expense.category.name, 
                                                expense.category.type)
             
-            if category_id is not None:
-                cursor.execute('''INSERT INTO expenses (
-                               name, amount, category_id) 
-                               VALUES (?, ?, ?)''', 
-                               (expense.name, expense.amount, category_id))
-                # Commit changes
-                self.conn.commit()
+        if category_id is not None:
+            cursor.execute('''INSERT INTO expenses (
+                            name, amount, category_id) 
+                            VALUES (?, ?, ?)''', 
+                            (expense.name, expense.amount, category_id))
+            # Commit changes
+            self.conn.commit()
 
-            else:
-                print("Category not found.")
-
-        except sqlite3.Error as error:
-            print(f"Error adding expense: {error}")
-            self.conn.rollback()
+        else:
+            print("Category not found.")
 
 
+    @handle_db_errors
     def add_user(self, user):
         '''
         Add username and password to 'users' table.
         '''
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute('''INSERT INTO users (username, password) 
-                           VALUES (?, ?)''', (user.username, user.password))
-            # Commit changes
-            self.conn.commit()
+        cursor = self.conn.cursor()
+        cursor.execute('''INSERT INTO users (username, password) 
+                        VALUES (?, ?)''', (user.username, user.password))
+        # Commit changes
+        self.conn.commit()
         
-        except sqlite3.Error as error:
-            print(f"Error adding user: {error}")
-            self.conn.rollback()
 
-
+    @handle_db_errors
     def authenticate_user(self, username, password):
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute('''SELECT id FROM users WHERE 
-                           username = ? AND password = ?''', 
-                           (username, password))
-            result = cursor.fetchone()
-            
-            if result:
-                return result[0]
-            
-            else:
-                return None
         
-        except sqlite3.Error as error:
-            print(f"Error authenticating user: {error}")
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT id FROM users WHERE 
+                        username = ? AND password = ?''', 
+                        (username, password))
+        result = cursor.fetchone()
+            
+        if result:
+            return result[0]
+            
+        else:
             return None
+        
 
-
+    @handle_db_errors
     def get_category_id(self, name, type):
         '''
         Method to fetch category_id from 'categories' table based on 
         name and type. 
         '''
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute('''SELECT id FROM categories WHERE name = ? AND
-                              type = ?''', (name, type))
-            result = cursor.fetchone()
+       
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT id FROM categories WHERE name = ? AND
+                        type = ?''', (name, type))
+        result = cursor.fetchone()
 
-            if result:
-                return result[0]
+        if result:
+            return result[0]
             
-            else:
-                print("Category not found.")
-                return None
-        
-        except sqlite3.Error as error:
-            print(f"Error fetching category id: {error}")
+        else:
+            print("Category not found.")
             return None
+        
 
-
+    @handle_db_errors
     def view_categories(self):
         '''
         Method to fetch and display all categories in categories table.
@@ -245,54 +223,47 @@ class BudgetManager:
             print(f"Error viewing categories: {error}")
 
 
+    @handle_db_errors
     def view_transactions(self, user_id, start_date=None, end_date=None):
         '''
         View all transactions stored in the 'transactions' table based
         on a date range. Default is one month from the day of request.
         '''
-        try:
-            cursor = self.conn.cursor()
-            if start_date and end_date:
-                cursor.execute('''SELECT * FROM transactions WHERE
-                               user_id = ? and date BETWEEN ? AND ?''', 
-                               (user_id, start_date, end_date))
+        cursor = self.conn.cursor()
+        if start_date and end_date:
+            cursor.execute('''SELECT * FROM transactions WHERE
+                            user_id = ? and date BETWEEN ? AND ?''', 
+                            (user_id, start_date, end_date))
                 
-            else:
-                cursor.execute("SELECT * FROM transactions WHERE user_id = ?", 
-                               (user_id))
+        else:
+            cursor.execute("SELECT * FROM transactions WHERE user_id = ?", 
+                            (user_id))
             
-            transactions = cursor.fetchall()
-            for transaction in transactions:
-                print(f"ID: {transaction[0]}, Amount: {transaction[1]}, "
-                      f"Date: {transaction[2]}, Category ID: {transaction[3]},"
-                      f" Description: {transaction[4]}")
+        transactions = cursor.fetchall()
+        for transaction in transactions:
+            print(f"ID: {transaction[0]}, Amount: {transaction[1]}, "
+                    f"Date: {transaction[2]}, Category ID: {transaction[3]},"
+                    f" Description: {transaction[4]}")
         
-        except sqlite3.Error as error:
-            print(f"Error viewing transactions: {error}")
 
-
+    @handle_db_errors
     def view_expenses(self):
         """
         View all expenses stored in the 'expenses' table.
         """
-        try:
-            cursor = self.conn.cursor()
-            cursor.execute("SELECT * FROM expenses")
-            expenses = cursor.fetchall()
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM expenses")
+        expenses = cursor.fetchall()
 
-            for expense in expenses:
-                print(f"ID: {expense[0]}, Name: {expense[1]}, "
-                      f"Amount: {expense[2]}, Category ID: {expense[3]}")
+        for expense in expenses:
+            print(f"ID: {expense[0]}, Name: {expense[1]}, "
+                    f"Amount: {expense[2]}, Category ID: {expense[3]}")
         
-        except sqlite3.Error as error:
-            print(f"Error viewing expenses: {error}")
-
-
+        
+    @handle_db_errors
     def close(self):
         '''
         Method to handle closing of database connections
         '''
-        try:
-            self.conn.close()
-        except sqlite3.Error as error:
-            print(f"Error closing table: {error}")
+        self.conn.close()
+        
