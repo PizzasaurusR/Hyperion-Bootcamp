@@ -62,29 +62,29 @@ def main():
         choice = input("Please enter your choice: ")
 
         if  choice == '1':
-            add_transaction(budget_manager, user_id)
+            menu.add_transaction(budget_manager, user_id)
         elif choice == '2':
-            view_transactions(budget_manager, user_id)
+            menu.view_transactions(budget_manager, user_id)
         elif choice == '3':
-            view_transactions_by_category(budget_manager, user_id)
+            menu.view_transactions_by_category(budget_manager, user_id)
         elif choice == '4':
-            add_expense(budget_manager, user_id)
+            menu.add_expense(budget_manager, user_id)
         elif choice == '5':
-            view_expenses(budget_manager)
+            menu.view_expenses(budget_manager)
         elif choice == '6':
-            add_income(budget_manager, user_id)
+            menu.add_income(budget_manager, user_id)
         elif choice == '7':
-            view_income(budget_manager, user_id)
+            menu.view_income(budget_manager, user_id)
         elif choice == '8':
-            view_income_by_category(budget_manager, user_id)
+            menu.view_income_by_category(budget_manager, user_id)
         elif choice == '9':
-            set_budget_for_category(budget_manager)
+            menu.set_budget_for_category(budget_manager)
         elif choice == '10':
-            view_budget_for_category(budget_manager)
+            menu.view_budget_for_category(budget_manager)
         elif choice == '11':
-            set_financial_goals(budget_manager)
+            menu.set_financial_goals(budget_manager)
         elif choice == '12':
-            view_progress_towards_goals(budget_manager)
+            menu.view_progress_towards_goals(budget_manager)
         elif choice == '13':
             print("Exiting...")
             break
