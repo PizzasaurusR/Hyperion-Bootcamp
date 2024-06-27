@@ -246,36 +246,34 @@ class BudgetManager:
         '''
         View all transactions stored in the 'transactions' table based
         on a date range. Default is one month from the day of request.
+
+        I'm damn proud of this. Created a variable query based on if the
+        user enters a date.
         '''
         cursor = self.conn.cursor()
+        query = "SELECT * FROM transactions WHERE user_id = ?"
+        params = [user_id]
+
         if start_date and end_date:
-            cursor.execute('''SELECT * FROM transactions WHERE
-                            user_id = ? and date BETWEEN ? AND ?''', 
-                            (user_id, start_date, end_date))
-                
-        else:
-            cursor.execute("SELECT * FROM transactions WHERE user_id = ?", 
-                            (user_id))
-            
+            query += " AND date BETWEEN ? AND ?"
+            params.extend([start_date, end_date])
+
+        cursor.execute(query, params)
         transactions = cursor.fetchall()
-        for transaction in transactions:
-            print(f"ID: {transaction[0]}, Amount: {transaction[1]}, "
-                    f"Date: {transaction[2]}, Category ID: {transaction[3]},"
-                    f" Description: {transaction[4]}")
+
+        return transactions # Return list of transactions. Empty if none
         
 
     @handle_db_errors
     def view_expenses(self):
-        """
+        '''
         View all expenses stored in the 'expenses' table.
-        """
+        '''
         cursor = self.conn.cursor()
         cursor.execute("SELECT * FROM expenses")
         expenses = cursor.fetchall()
 
-        for expense in expenses:
-            print(f"ID: {expense[0]}, Name: {expense[1]}, "
-                    f"Amount: {expense[2]}, Category ID: {expense[3]}")
+        return expenses  # Return list of expenses. Empty if none.        
         
         
     @handle_db_errors
