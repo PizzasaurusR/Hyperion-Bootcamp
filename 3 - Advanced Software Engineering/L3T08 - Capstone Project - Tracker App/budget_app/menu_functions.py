@@ -19,17 +19,21 @@ def add_transaction(budget_manager, user_id):
         amount = float(input("Enter amount: "))
         date = input("Enter date (YYYY-MM-DD): ")
         category_name = input("Enter category name: ")
-        category_type = input("Enter category type (expense/income): ")
-        description = input("Enter description: ")
-        category = Category(category_name, category_type)
-        transaction = Transaction(amount, date, category, description, user_id)
+        category = budget_manager.get_category_id(category_name)
 
-        if budget_manager.add_transaction(transaction):
-            print("Transaction added successfully!")
-
+        if category:
+            description = input("Enter description: ")
+            transaction = Transaction(amount, date, category, description)
+            
+            if budget_manager.add_transaction(transaction, user_id):
+                print("Transaction added successfully!")
+            
+            else:
+                print("Failed to add transaction.")
+        
         else:
-            print("Failed to add transaction")
-    
+            print("Category not found.")
+
     except ValueError:
         print("Invalid input. Please ensure all entered values are correct.")
     
@@ -45,15 +49,19 @@ def add_expense(budget_manager, user_id):
         name = input("Enter expense name: ")
         amount = float(input("Enter expense amount: "))
         category_name = input("Enter category name: ")
-        category_type = input("Enter category type (expense/income): ")
-        category = Category(category_name, category_type)
-        expense = Expense(name, amount, category, user_id)
+        category = budget_manager.get_category_id(category_name)
         
-        if budget_manager.add_expense(expense):
-            print("Expense added successfully.")
+        if category:
+            expense = Expense(name, amount, category)
+        
+            if budget_manager.add_expense(expense, user_id):
+                print("Expense added successfully!")
+        
+            else:
+                print("Failed to add expense.")
         
         else:
-            print("Failed to add expense.")
+            print("Category not found.")
     
     except ValueError:
         print("Invalid input. Please ensure all entered values are correct.")
@@ -140,6 +148,21 @@ def add_saving(budget_manager, user_id):
     else:
         print("Failed to add saving.")
 
+
+def add_category(budget_manager):
+    '''
+    Function to get user input to add a category
+    '''
+    name = input("Enter category name: ")
+    type = input("Enter category type: ")
+    category = Category(name, type)
+    
+    if budget_manager.add_category(category):
+        print("Category added successfully!")
+    
+    else:
+        print("Failed to add category.")
+
         
 # Fetch operators
 
@@ -151,13 +174,18 @@ def view_transactions(budget_manager, user_id):
         start_date = input("Enter start date (YYYY-MM-DD) or leave blank: ")
         end_date = input("Enter end date (YYYY-MM-DD) or leave blank: ")
         transactions = budget_manager.view_transactions(user_id, 
-                                                        start_date, end_date)
-        if not transactions:
-            print("No transactions found for the given date range.")
+                                                    start_date if start_date
+                                                    else None, 
+                                                    end_date if end_date
+                                                    else None)
+        if transactions:
+            for transaction in transactions:
+                print(f"Transaction ID: {transaction[0]}, "
+                      f"Amount: {transaction[1]}, Date: {transaction[2]},"
+                      f" Description: {transaction[3]}")
         
         else:
-            for transaction in transactions:
-                print(transaction)
+            print("No transactions found.")
     
     except Exception as error:
         print(f"An error occurred while retrieving transactions: {error}")
@@ -187,19 +215,19 @@ def view_transactions_by_category(budget_manager, user_id):
         print(f"An error occurred: {error}")
 
 
-def view_expenses(budget_manager):
+def view_expenses(budget_manager, user_id):
     '''
     Function to view expenses.
     '''
     try:
-        expenses = budget_manager.view_expenses()
+        expenses = budget_manager.view_expenses(user_id)
         
-        if not expenses:
-            print("No expenses found.")
-        
-        else:
+        if expenses:
             for expense in expenses:
-                print(expense)
+                print(f"Expense ID: {expense[0]}, Name: {expense[1]}, "
+                      f"Amount: {expense[2]}")
+        else:
+            print("No expenses found.")
     
     except Exception as error:
         print(f"An error occurred while retrieving expenses: {error}")
@@ -237,6 +265,21 @@ def view_income_by_category(budget_manager, user_id):
             print(f"Income ID: {income[0]}, Amount: {income[2]}, "
                   f"Date: {income[3]}, Category ID: {income[4]}, "
                   f"Description: {income[5]}")
+
+
+def view_categories(budget_manager):
+    '''
+    Function to view all saved categories
+    '''
+    categories = budget_manager.view_categories()
+    
+    if categories:
+        for category in categories:
+            print(f"Category ID: {category[0]}, Name: {category[1]}, "
+                  f"Type: {category[2]}")
+    
+    else:
+        print("No categories found.")
 
 
 def view_budget_for_category(budget_manager, user_id):
@@ -279,12 +322,14 @@ def validate_date(date_text):
     Validates the date format YYYY-MM-DD.
     '''
     try:
-        datetime.datetime.strptime(date_text, '%Y-%m-%d')
         
+        if date_text:
+            datetime.datetime.strptime(date_text, '%Y-%m-%d')
         return True
     
     except ValueError:
         return False
+
 
 def get_valid_input(prompt, value_type=float, validator=None):
     '''

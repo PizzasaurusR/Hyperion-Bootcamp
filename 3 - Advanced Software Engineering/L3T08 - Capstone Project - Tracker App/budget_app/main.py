@@ -45,7 +45,7 @@ def main():
             print("Invalid choice. Please try again.")   
     
     while True:
-        print('''--- Budget Management Menu ---
+        print('''\n--- Budget Management Menu ---
             1. Add Transaction
             2. View Transactions
             3. View Transactions by Category
@@ -86,12 +86,16 @@ def main():
         elif choice == '12':
             menu.view_progress_towards_goals(budget_manager, user_id)
         elif choice == '13':
-            print("Exiting...")
+            print("\nExiting...")
             break
         
         else:
             print("Invalid choice. Please try again")
 
     budget_manager.close()
+
+#-----------------------------------------------------------------------
+# MAIN PROGRAM
+#-----------------------------------------------------------------------
 
 main()

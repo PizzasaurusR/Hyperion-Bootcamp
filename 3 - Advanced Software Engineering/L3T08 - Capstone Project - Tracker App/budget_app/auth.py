@@ -23,7 +23,7 @@ def login(budget_manager):
                 return user_id
             
             else:
-                print("Invalid username or password. Please try again.")
+                print("Invalid username or password. Please try again.\n")
 
 
 def register(budget_manager):
@@ -38,6 +38,6 @@ def register(budget_manager):
             user = User(username, password)
             budget_manager.add_user(user)
             
-            print("Registration successful. Please login.")
+            print("Registration successful. Please login.\n")
             return
         

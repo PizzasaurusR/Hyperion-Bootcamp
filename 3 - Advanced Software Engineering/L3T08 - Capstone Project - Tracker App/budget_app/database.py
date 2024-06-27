@@ -11,7 +11,7 @@ Added user table and modified all searches to be based on a user profile
 #-----------------------------------------------------------------------
 # IMPORTS
 #-----------------------------------------------------------------------
-
+import datetime
 import sqlite3
 # Import classes from models.py
 from models import Category, Transaction, Expense, User
@@ -76,21 +76,23 @@ class BudgetManager:
         # Create 'transactions' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
                         id INTEGER PRIMARY KEY,
+                        user_id INTEGER,
                         amount REAL NOT NULL,
                         date TEXT NOT NULL,
                         category_id INTEGER,
                         description TEXT,
-                        FOREIGN KEY(category_id) REFERENCES categories(id))
-                        ''')
+                        FOREIGN KEY(category_id) REFERENCES categories(id),
+                        FOREIGN KEY(user_id) REFERENCES users(id))''')
             
         # Create 'expenses' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
                         id INTEGER PRIMARY KEY,
+                        user_id INTEGER,
                         name TEXT NOT NULL,
                         amount REAL NOT NULL,
                         category_id INTEGER,
-                        FOREIGN KEY(category_id) REFERENCES categories(id
-                        ))''')
+                        FOREIGN KEY(category_id) REFERENCES categories(id))
+                        FOREIGN KEY(user_id) REFERENCES users(id))''')
             
         # Create 'users' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS users (
@@ -162,7 +164,7 @@ class BudgetManager:
 
     
     @handle_db_errors
-    def add_transaction(self, transaction):
+    def add_transaction(self, transaction, user_id):
         '''
         Add transactions to 'transactions' table.
         '''
@@ -173,10 +175,12 @@ class BudgetManager:
         if category_id:
             try:
                 cursor.execute('''INSERT INTO transactions (
-                                amount, date, category_id, description) 
-                                VALUES (?, ?, ?, ?)''', 
-                                (transaction.amount, transaction.date, 
-                                category_id, transaction.description))
+                                user_id, amount, date, category_id, 
+                               description) VALUES (?, ?, ?, ?, ?)''', 
+                                (user_id, transaction.amount, 
+                                 transaction.date, category_id, 
+                                 transaction.description 
+                                ))
                 # Commit changes
                 self.conn.commit()
                 return True  # Successful addition
@@ -190,7 +194,7 @@ class BudgetManager:
         
 
     @handle_db_errors
-    def add_expense(self, expense):
+    def add_expense(self, expense, user_id):
         '''
         Add expenses to 'expenses' table.
         '''
@@ -201,9 +205,10 @@ class BudgetManager:
         if category_id:
             try:
                 cursor.execute('''INSERT INTO expenses (
-                                name, amount, category_id) 
+                                user_id, name, amount, category_id) 
                                 VALUES (?, ?, ?)''', 
-                                (expense.name, expense.amount, category_id))
+                                (user_id, expense.name, expense.amount, 
+                                 category_id))
                 # Commit changes
                 self.conn.commit()
                 return True  # Expense added
@@ -247,7 +252,7 @@ class BudgetManager:
 
 
     @handle_db_errors
-    def add_income(self, income):
+    def add_income(self, income, user_id):
         '''
         Method to add income into 'incomes' table
         '''
@@ -406,12 +411,12 @@ class BudgetManager:
 
 
     @handle_db_errors
-    def view_expenses(self):
+    def view_expenses(self, user_id):
         '''
         View all expenses stored in the 'expenses' table.
         '''
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM expenses")
+        cursor.execute("SELECT * FROM expenses WHERE user_id = ?", (user_id))
         expenses = cursor.fetchall()
 
         return expenses  # Return list of expenses. Empty if none.        
@@ -423,7 +428,7 @@ class BudgetManager:
         View all user income/s stored in the 'incomes' table.
         '''
         cursor = self.conn.cursor()
-        cursor.execute("SELECT * FROM income WHERE user_id = ?", (user_id,))
+        cursor.execute("SELECT * FROM income WHERE user_id = ?", (user_id))
         incomes = cursor.fetchall()
         
         return incomes
@@ -462,7 +467,7 @@ class BudgetManager:
     def get_goals(self, user_id):  
         cursor = self.conn.cursor()
         cursor.execute('''SELECT goal_description, target_amount, due_date 
-                       FROM goals WHERE user_id = ?''', (user_id,))
+                       FROM goals WHERE user_id = ?''', (user_id))
         
         return [
             {'description': row[0], 'target_amount': row[1], 
@@ -476,14 +481,14 @@ class BudgetManager:
         '''
         cursor = self.conn.cursor()
         cursor.execute('''SELECT amount, date_saved, goal_id 
-                       FROM savings WHERE user_id = ?''', (user_id,))
+                       FROM savings WHERE user_id = ?''', (user_id))
         
         return [{'amount': row[0], 'date_saved': row[1], 'goal_id': row[2]}
                  for row in cursor.fetchall()]
 
 
     @handle_db_errors
-    def view_progress_towards_goals(self, user_id: int):
+    def view_progress_towards_goals(self, user_id):
         cursor = self.conn.cursor()
         cursor.execute('''SELECT g.goal_description, g.target_amount, 
                         g.due_date, IFNULL(SUM(s.amount), 0) as total_saved
@@ -491,7 +496,7 @@ class BudgetManager:
                         LEFT JOIN savings s 
                         ON g.id = s.goal_id AND s.user_id = g.user_id
                         WHERE g.user_id = ?
-                        GROUP BY g.id''', (user_id,))
+                        GROUP BY g.id''', (user_id))
         goals = cursor.fetchall()
         
         for goal in goals:
