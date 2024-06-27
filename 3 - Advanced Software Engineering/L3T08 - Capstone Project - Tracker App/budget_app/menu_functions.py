@@ -1,12 +1,14 @@
 #-----------------------------------------------------------------------
 # IMPORTS
 #-----------------------------------------------------------------------
-from models import Category, Transaction, Expense
+from models import Category, Transaction, Expense, Income
 from database import BudgetManager
 
 #-----------------------------------------------------------------------
 # FUNCTIONS
 #-----------------------------------------------------------------------
+
+# Add or update operators
 
 def add_transaction(budget_manager, user_id):
     '''
@@ -34,26 +36,6 @@ def add_transaction(budget_manager, user_id):
         print(f"An error occurred: {error}")
 
 
-def view_transactions(budget_manager, user_id):
-    '''
-    Function to collect user input to view transactions
-    '''
-    try:
-        start_date = input("Enter start date (YYYY-MM-DD) or leave blank: ")
-        end_date = input("Enter end date (YYYY-MM-DD) or leave blank: ")
-        transactions = budget_manager.view_transactions(user_id, 
-                                                        start_date, end_date)
-        if not transactions:
-            print("No transactions found for the given date range.")
-        
-        else:
-            for transaction in transactions:
-                print(transaction)
-    
-    except Exception as error:
-        print(f"An error occurred while retrieving transactions: {error}")
-
-
 def add_expense(budget_manager, user_id):
     '''
     Function to collect user input to add an expense.
@@ -79,6 +61,85 @@ def add_expense(budget_manager, user_id):
         print(f"An error occurred: {error}")
 
 
+def add_income(budget_manager, user_id):
+    try:
+        amount = float(input("Enter the income amount: "))
+        date = input("Enter the date of income (YYYY-MM-DD): ")
+        category_id = int(input("Enter the category ID (or 0 if none): "))
+        description = input("Enter a description for the income: ")
+        
+        # Assuming category_id of 0 means no specific category
+        category_id = None if category_id == 0 else category_id
+        
+        income = Income(user_id, amount, date, category_id, description)
+        
+        if budget_manager.add_income(income):
+            print("Income added successfully.")
+        
+        else:
+            print("Failed to add income.")
+    
+    except ValueError:
+        print("Invalid input. Please make sure all inputs are"
+              " correctly formatted.")
+    
+    except Exception as error:
+        print(f"An error occurred: {error}")
+
+
+def set_financial_goals(budget_manager):
+    print("Feature not implemented yet.")
+
+
+def set_budget_for_category(budget_manager):
+    print("Feature not implemented yet.")
+
+# Fetch operators
+
+def view_transactions(budget_manager, user_id):
+    '''
+    Function to collect user input to view transactions
+    '''
+    try:
+        start_date = input("Enter start date (YYYY-MM-DD) or leave blank: ")
+        end_date = input("Enter end date (YYYY-MM-DD) or leave blank: ")
+        transactions = budget_manager.view_transactions(user_id, 
+                                                        start_date, end_date)
+        if not transactions:
+            print("No transactions found for the given date range.")
+        
+        else:
+            for transaction in transactions:
+                print(transaction)
+    
+    except Exception as error:
+        print(f"An error occurred while retrieving transactions: {error}")
+
+
+def view_transactions_by_category(budget_manager, user_id):
+    '''
+    Function to fetch and display all transactions by categories.
+    '''
+    category_name = input("Enter the category name to filter by: ")
+    try:
+        transactions = budget_manager.view_transactions_by_category(
+            user_id, category_name)
+        
+        if not transactions:
+            print("No transactions found for the specified category.")
+        
+        else:
+            for transaction in transactions:
+                print(f"ID: {transaction[0]}, "
+                      f"Amount: {transaction[1]}, "
+                      f"Date: {transaction[2]}, "
+                      f"Description: {transaction[3]}, "
+                      f"Category: {transaction[4]}")
+    
+    except Exception as error:
+        print(f"An error occurred: {error}")
+
+
 def view_expenses(budget_manager):
     '''
     Function to view expenses.
@@ -97,31 +158,41 @@ def view_expenses(budget_manager):
         print(f"An error occurred while retrieving expenses: {error}")
 
 
-def view_transactions_by_category(budget_manager, user_id):
-    print("Feature not implemented yet.")
-
-
-def add_income(budget_manager, user_id):
-    print("Feature not implemented yet.")
-
-
 def view_income(budget_manager, user_id):
-    print("Feature not implemented yet.")
+    '''
+    Function to view user income/s.
+    '''
+    incomes = budget_manager.view_income(user_id)
+    
+    if not incomes:
+        
+        print("No income records found.")
+    
+    else:
+        for income in incomes:
+            print(f"Income ID: {income[0]}, Amount: {income[2]}, "
+                  f"Date: {income[3]}, Category ID: {income[4]}, "
+                  f"Description: {income[5]}")
 
 
 def view_income_by_category(budget_manager, user_id):
-    print("Feature not implemented yet.")
-
-
-def set_budget_for_category(budget_manager):
-    print("Feature not implemented yet.")
+    '''
+    Function to view user income/s by category
+    '''
+    category_id = int(input("Enter the category ID to filter by: "))
+    incomes = budget_manager.view_income_by_category(user_id, category_id)
+    
+    if not incomes:
+        print("No income records found for this category.")
+    
+    else:
+        for income in incomes:
+            print(f"Income ID: {income[0]}, Amount: {income[2]}, "
+                  f"Date: {income[3]}, Category ID: {income[4]}, "
+                  f"Description: {income[5]}")
 
 
 def view_budget_for_category(budget_manager):
-    print("Feature not implemented yet.")
-
-
-def set_financial_goals(budget_manager):
     print("Feature not implemented yet.")
 
 

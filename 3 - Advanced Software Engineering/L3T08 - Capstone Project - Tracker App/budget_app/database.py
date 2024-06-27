@@ -97,6 +97,17 @@ class BudgetManager:
                         id INTEGER PRIMARY KEY,
                         username TEXT NOT NULL UNIQUE,
                         password TEXT NOT NULL)''')
+        
+        # Create 'income' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS income (
+                      id INTEGER PRIMARY KEY,
+                      user_id INTEGER,
+                      amount REAL NOT NULL,
+                      date TEXT NOT NULL,
+                      category_id INTEGER,
+                      description TEXT,
+                      FOREIGN KEY(category_id) REFERENCES categories(id),
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
 
         # Commit changes
         self.conn.commit()
@@ -201,7 +212,27 @@ class BudgetManager:
             
         else:
             return None
+
+
+    @handle_db_errors
+    def add_income(self, income):
+        cursor = self.conn.cursor()
         
+        try:
+            cursor.execute('''INSERT INTO income 
+                           (user_id, amount, date, category_id, description) 
+                           VALUES (?, ?, ?, ?, ?)''',
+                        (income.user_id, income.amount, income.date, 
+                         income.category_id, income.description))
+            
+            self.conn.commit()
+            return True
+        
+        except sqlite3.Error as error:
+            print(f"Failed to add income: {error}")
+            return False
+
+
 # Fetch Operators
     @handle_db_errors
     def get_category_id(self, name, type):
@@ -262,7 +293,32 @@ class BudgetManager:
         transactions = cursor.fetchall()
 
         return transactions # Return list of transactions. Empty if none
+
+
+    @handle_db_errors
+    def view_transactions_by_category(self, user_id, category_name):
+        '''
+        Method to fetch and display all transactions by categories.
+        '''
+        cursor = self.conn.cursor()
+    
+        try:
+            cursor.execute('''
+                SELECT t.id, t.amount, t.date, t.description, 
+                        c.name as category_name
+                FROM transactions t
+                JOIN categories c ON t.category_id = c.id
+                WHERE t.user_id = ? AND c.name = ?
+            ''', (user_id, category_name))
         
+            transactions = cursor.fetchall()
+            # Returns a list of transactions in the given category
+            return transactions  
+    
+        except sqlite3.Error as error:
+            print(f"Database error: {error}")
+            return []  # Return an empty list if an error occurs
+
 
     @handle_db_errors
     def view_expenses(self):
@@ -274,8 +330,28 @@ class BudgetManager:
         expenses = cursor.fetchall()
 
         return expenses  # Return list of expenses. Empty if none.        
+
+
+    @handle_db_errors
+    def view_income(self, user_id):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT * FROM income WHERE user_id = ?", (user_id,))
+        incomes = cursor.fetchall()
         
+        return incomes
+
+
+    @handle_db_errors
+    def view_income_by_category(self, user_id, category_id):
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT * FROM income WHERE 
+                       user_id = ? AND category_id = ?''', 
+                       (user_id, category_id))
+        incomes = cursor.fetchall()
         
+        return incomes
+
+
     @handle_db_errors
     def close(self):
         '''

@@ -65,4 +65,20 @@ class User:
     def __str__(self):
         return f"User: {self.username}"
 
-    
+class Income:
+    '''
+    Class to define Income.
+    __str__ was used to ensure that a string is returned when calling 
+    the method.
+    '''
+    def __init__(self, user_id, amount, date, category_id, description):
+        self.user_id = user_id
+        self.amount = amount
+        self.date = date
+        self.category_id = category_id
+        self.description = description
+
+    def __str__(self):
+        return (f"Income[ID: {self.user_id}, Amount: {self.amount}, "
+                f"Date: {self.date}, Category ID: {self.category_id}, "
+                f"Description: '{self.description}']")
