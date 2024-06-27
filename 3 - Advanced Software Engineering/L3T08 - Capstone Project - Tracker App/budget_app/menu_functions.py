@@ -1,6 +1,7 @@
 #-----------------------------------------------------------------------
 # IMPORTS
 #-----------------------------------------------------------------------
+import datetime
 from models import Category, Transaction, Expense, Income
 from database import BudgetManager
 
@@ -121,6 +122,25 @@ def set_budget_for_category(budget_manager, user_id):
     else:
         print("Failed to set budget for the category.")
 
+
+def add_saving(budget_manager, user_id):
+    amount = get_valid_input("Enter the saving amount: ", float)
+    
+    date_saved = get_valid_input("Enter the date of saving (YYYY-MM-DD): ", 
+                                 str, validate_date)
+    
+    goal_id = get_valid_input("Enter the goal ID to link this saving to "
+                              "(or 0 if none): ", int)
+
+    goal_id = None if goal_id == 0 else goal_id
+
+    if budget_manager.add_saving(user_id, amount, date_saved, goal_id):
+        print("Saving added successfully.")
+    
+    else:
+        print("Failed to add saving.")
+
+        
 # Fetch operators
 
 def view_transactions(budget_manager, user_id):
@@ -239,13 +259,48 @@ def view_progress_towards_goals(budget_manager, user_id):
     '''
     Function to display progress towards goals.
     '''
-    goals = budget_manager.get_goals(user_id)
+    goals = budget_manager.view_progress_towards_goals(user_id)
     
-    if goals:
-        for goal in goals:
-            print(f"Goal: {goal['description']}\n"
-                  f"Target: {goal['target_amount']}\n"
-                  f" Due Date: {goal['due_date']}\n")
+    if not goals:
+        print("No financial goals or savings found.")
     
     else:
-        print("No financial goals set.")
+        for goal in goals:
+            print(f"Goal: {goal['description']}, "
+                  f"Target: {goal['target_amount']}, "
+                  f"Due Date: {goal['due_date']}, "
+                  f"Saved: {goal['total_saved']}")
+
+
+# Get Valid input operators
+
+def validate_date(date_text):
+    '''
+    Validates the date format YYYY-MM-DD.
+    '''
+    try:
+        datetime.datetime.strptime(date_text, '%Y-%m-%d')
+        
+        return True
+    
+    except ValueError:
+        return False
+
+def get_valid_input(prompt, value_type=float, validator=None):
+    '''
+    Function to get validated user input.
+    '''
+    while True:
+        user_input = input(prompt)
+        
+        try:
+            user_input = value_type(user_input)
+            
+            if validator and not validator(user_input):
+                raise ValueError("Validation failed.")
+            
+            return user_input
+        
+        except ValueError as error:
+            print(f"Invalid input ({error}). Please try again.")
+

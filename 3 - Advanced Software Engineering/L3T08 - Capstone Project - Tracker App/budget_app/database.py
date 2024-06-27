@@ -80,7 +80,7 @@ class BudgetManager:
                         date TEXT NOT NULL,
                         category_id INTEGER,
                         description TEXT,
-                        FOREIGN KEY(category_id) REFERENCE categories(id))
+                        FOREIGN KEY(category_id) REFERENCES categories(id))
                         ''')
             
         # Create 'expenses' table if not exist
@@ -126,6 +126,18 @@ class BudgetManager:
                         budget_amount REAL,
                         FOREIGN KEY(category_id) REFERENCES categories(id),
                         FOREIGN KEY(user_id) REFERENCES users(id))''')
+        
+
+        # Create 'savings' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS savings (
+                        id INTEGER PRIMARY KEY,
+                        user_id INTEGER,
+                        amount REAL NOT NULL,
+                        date_saved TEXT NOT NULL,
+                        goal_id INTEGER, 
+                        FOREIGN KEY(user_id) REFERENCES users(id),
+                        FOREIGN KEY(goal_id) REFERENCES goals(id))
+                        ''')
         
         # Commit changes
         self.conn.commit()
@@ -274,7 +286,7 @@ class BudgetManager:
     @handle_db_errors
     def add_goal(self, user_id, description, target_amount, due_date):
         '''
-        Method to set financial goals in 'goals' table
+        Method to add financial goals in 'goals' table
         '''
         cursor = self.conn.cursor()
         cursor.execute('''INSERT INTO goals 
@@ -286,6 +298,25 @@ class BudgetManager:
         
         return True
     
+
+    @handle_db_errors
+    def add_saving(self, user_id, amount, date_saved, goal_id = None):
+        '''
+        Method to add savings in 'savings' table
+        '''
+        cursor = self.conn.cursor()
+        
+        try:
+            cursor.execute('''INSERT INTO savings 
+                           (user_id, amount, date_saved, goal_id) 
+                           VALUES (?, ?, ?, ?)''', 
+                           (user_id, amount, date_saved, goal_id))
+            self.conn.commit()
+            return True
+        
+        except sqlite3.Error:
+            self.conn.rollback()
+            return False
 
 # Fetch Operators
     @handle_db_errors
@@ -426,6 +457,7 @@ class BudgetManager:
         
         return {'budget_amount': result[0]} if result else None
 
+
     @handle_db_errors
     def get_goals(self, user_id):  
         cursor = self.conn.cursor()
@@ -435,6 +467,36 @@ class BudgetManager:
         return [
             {'description': row[0], 'target_amount': row[1], 
              'due_date': row[2]} for row in cursor.fetchall()]
+
+
+    @handle_db_errors
+    def view_savings(self, user_id):
+        '''
+        View all user savings stored in the 'savings' table.
+        '''
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT amount, date_saved, goal_id 
+                       FROM savings WHERE user_id = ?''', (user_id,))
+        
+        return [{'amount': row[0], 'date_saved': row[1], 'goal_id': row[2]}
+                 for row in cursor.fetchall()]
+
+
+    @handle_db_errors
+    def view_progress_towards_goals(self, user_id: int):
+        cursor = self.conn.cursor()
+        cursor.execute('''SELECT g.goal_description, g.target_amount, 
+                        g.due_date, IFNULL(SUM(s.amount), 0) as total_saved
+                        FROM goals g
+                        LEFT JOIN savings s 
+                        ON g.id = s.goal_id AND s.user_id = g.user_id
+                        WHERE g.user_id = ?
+                        GROUP BY g.id''', (user_id,))
+        goals = cursor.fetchall()
+        
+        for goal in goals:
+            print(f"Goal: {goal[0]}, Target: {goal[1]}, "
+                  f"Due Date: {goal[2]}, Saved: {goal[3]}")
 
 
     @handle_db_errors

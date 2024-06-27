@@ -94,3 +94,4 @@ def main():
 
     budget_manager.close()
 
+main()
