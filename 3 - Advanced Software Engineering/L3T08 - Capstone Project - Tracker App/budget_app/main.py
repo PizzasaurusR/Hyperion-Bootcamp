@@ -1,14 +1,10 @@
 #-----------------------------------------------------------------------
-# LIBRARY IMPORT
+# IMPORTS
 #-----------------------------------------------------------------------
-import sqlite3
 
-from models import Category, Transaction, Expense, User
 from database import BudgetManager
 from auth import login, register
-#-----------------------------------------------------------------------
-# CLASSES
-#-----------------------------------------------------------------------
+import menu_functions as menu
 
 #-----------------------------------------------------------------------
 # FUNCTIONS
@@ -27,6 +23,8 @@ def main():
 
     A transaction will be any deduction in funds that would occur in a
     persons day-to-day life, such as Groceries, Petrol etc.
+
+    All menu functions moved out of main and into menu_functions.py
     '''
     budget_manager = BudgetManager()
 
@@ -94,7 +92,5 @@ def main():
         else:
             print("Invalid choice. Please try again")
 
+    budget_manager.close()
 
-#-----------------------------------------------------------------------
-# MAIN PROGRAM
-#-----------------------------------------------------------------------

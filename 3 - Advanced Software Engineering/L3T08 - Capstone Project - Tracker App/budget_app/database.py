@@ -9,7 +9,7 @@ Exception handling has been added.
 Added user table and modified all searches to be based on a user profile
 '''
 #-----------------------------------------------------------------------
-# LIBRARY IMPORT
+# IMPORTS
 #-----------------------------------------------------------------------
 
 import sqlite3
