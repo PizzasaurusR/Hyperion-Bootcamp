@@ -69,36 +69,36 @@ class BudgetManager:
         cursor = self.conn.cursor()
         # Create 'categories' table if not exist 
         cursor.execute('''CREATE TABLE IF NOT EXISTS categories (
-                        id INTEGER PRIMARY KEY,
-                        name TEXT NOT NULL,
-                        type TEXT NOT NULL)''')
-            
+                      id INTEGER PRIMARY KEY,
+                      name TEXT NOT NULL,
+                      type TEXT NOT NULL)''')
+
+        # Create 'users' table if not exist
+        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+                      id INTEGER PRIMARY KEY,
+                      username TEXT NOT NULL UNIQUE,
+                      password TEXT NOT NULL)''')
+
         # Create 'transactions' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS transactions (
-                        id INTEGER PRIMARY KEY,
-                        user_id INTEGER,
-                        amount REAL NOT NULL,
-                        date TEXT NOT NULL,
-                        category_id INTEGER,
-                        description TEXT,
-                        FOREIGN KEY(category_id) REFERENCES categories(id),
-                        FOREIGN KEY(user_id) REFERENCES users(id))''')
+                      id INTEGER PRIMARY KEY,
+                      user_id INTEGER,
+                      amount REAL NOT NULL,
+                      date TEXT NOT NULL,
+                      category_id INTEGER,
+                      description TEXT,
+                      FOREIGN KEY(category_id) REFERENCES categories(id),
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
             
         # Create 'expenses' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS expenses (
-                        id INTEGER PRIMARY KEY,
-                        user_id INTEGER,
-                        name TEXT NOT NULL,
-                        amount REAL NOT NULL,
-                        category_id INTEGER,
-                        FOREIGN KEY(category_id) REFERENCES categories(id))
-                        FOREIGN KEY(user_id) REFERENCES users(id))''')
-            
-        # Create 'users' table if not exist
-        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
-                        id INTEGER PRIMARY KEY,
-                        username TEXT NOT NULL UNIQUE,
-                        password TEXT NOT NULL)''')
+                      id INTEGER PRIMARY KEY,
+                      user_id INTEGER,
+                      name TEXT NOT NULL,
+                      amount REAL NOT NULL,
+                      category_id INTEGER,
+                      FOREIGN KEY(category_id) REFERENCES categories(id),
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
         
         # Create 'income' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS income (
@@ -113,33 +113,31 @@ class BudgetManager:
         
         # Create 'goals' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS goals (
-                        id INTEGER PRIMARY KEY,
-                        user_id INTEGER,
-                        goal_description TEXT,
-                        target_amount REAL,
-                        due_date TEXT,
-                        FOREIGN KEY(user_id) REFERENCES users(id))''')
+                      id INTEGER PRIMARY KEY,
+                      user_id INTEGER,
+                      goal_description TEXT,
+                      target_amount REAL,
+                      due_date TEXT,
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
             
         # Create 'budget' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS budgets (
-                        id INTEGER PRIMARY KEY,
-                        category_id INTEGER,
-                        user_id INTEGER,
-                        budget_amount REAL,
-                        FOREIGN KEY(category_id) REFERENCES categories(id),
-                        FOREIGN KEY(user_id) REFERENCES users(id))''')
+                      id INTEGER PRIMARY KEY,
+                      category_id INTEGER,
+                      user_id INTEGER,
+                      budget_amount REAL,
+                      FOREIGN KEY(category_id) REFERENCES categories(id),
+                      FOREIGN KEY(user_id) REFERENCES users(id))''')
         
-
         # Create 'savings' table if not exist
         cursor.execute('''CREATE TABLE IF NOT EXISTS savings (
-                        id INTEGER PRIMARY KEY,
-                        user_id INTEGER,
-                        amount REAL NOT NULL,
-                        date_saved TEXT NOT NULL,
-                        goal_id INTEGER, 
-                        FOREIGN KEY(user_id) REFERENCES users(id),
-                        FOREIGN KEY(goal_id) REFERENCES goals(id))
-                        ''')
+                      id INTEGER PRIMARY KEY,
+                      user_id INTEGER,
+                      amount REAL NOT NULL,
+                      date_saved TEXT NOT NULL,
+                      goal_id INTEGER, 
+                      FOREIGN KEY(user_id) REFERENCES users(id),
+                      FOREIGN KEY(goal_id) REFERENCES goals(id))''')
         
         # Commit changes
         self.conn.commit()
@@ -153,8 +151,8 @@ class BudgetManager:
         cursor = self.conn.cursor()
 
         try:
-            cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)", 
-                            (category.name, category.type))
+            cursor.execute("INSERT INTO categories (name,type) VALUES (?, ?)",  
+                           (category.name, category.type))
             # Commit changes
             self.conn.commit()
             return True  # Indicate success
